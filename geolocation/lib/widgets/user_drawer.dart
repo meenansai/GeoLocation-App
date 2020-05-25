@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
-import '../screens/AuthScreen.dart';
-import '../screens/AuthScreen.dart';
+
 class UserDrawer extends StatelessWidget {
   const UserDrawer({
     Key key,
@@ -22,9 +21,9 @@ class UserDrawer extends StatelessWidget {
         SizedBox(
           height: 3,
         ),
-        // addDrawerList(Icon(Icons.home), 'Home', '/', context),
-        // addDrawerList(
-        //     Icon(Icons.border_color), 'Change Password', '/', context),
+        addDrawerList(Icon(Icons.home), 'Home', '/', context),
+        addDrawerList(
+            Icon(Icons.border_color), 'Change Password', '/', context),
         // addDrawerList(Icon(Icons.keyboard_backspace), 'Logout', '/', context),
         ListTile(
           title: Text("Logout"),
@@ -32,7 +31,7 @@ class UserDrawer extends StatelessWidget {
           onTap: () {
             // Navigator.of(context).pop();
             Navigator.of(context).pushReplacementNamed('/');
-            Provider.of<Auth>(context).logout();
+            Provider.of<Auth>(context, listen: false).logout();
           },
         ),
       ],

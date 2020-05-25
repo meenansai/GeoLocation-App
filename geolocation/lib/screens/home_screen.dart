@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import '../utils/map_util.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import '../utils/firebase_data.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import '../widgets/user_drawer.dart';
@@ -28,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var _isSharing = false;
   var _isEnable = true;
   var uid = "-M7cmD0uw4HoZ10pIrXX";
+  ProgressDialog pr;
 
   StreamSubscription _locationSubscription;
   Location _locationTracker = Location();
@@ -95,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _locationSubscription =
           _locationTracker.onLocationChanged().listen((newLocalData) {
         if (_isSharing) {
-          MapUtil.updateLatLng(
+          FirebaseData.updateLatLng(
               uid, newLocalData.latitude, newLocalData.longitude);
         }
         if (_controller != null) {
@@ -123,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  //Camera
+  //Camera Module
   StorageReference storageReference = FirebaseStorage.instance.ref();
 
   Future<void> _takePicture() async {
@@ -141,17 +143,21 @@ class _HomeScreenState extends State<HomeScreen> {
       final String url = await ref.getDownloadURL();
       print("The download URL is " + url);
     } else if (storageUploadTask.isInProgress) {
+      pr.show();
       storageUploadTask.events.listen((event) {
         double percentage = 100 *
             (event.snapshot.bytesTransferred.toDouble() /
                 event.snapshot.totalByteCount.toDouble());
+        if (percentage == 100.0) {
+          pr.hide();
+        }
         print("THe percentage " + percentage.toString());
       });
 
       StorageTaskSnapshot storageTaskSnapshot =
           await storageUploadTask.onComplete;
       final downloadUrl1 = await storageTaskSnapshot.ref.getDownloadURL();
-
+      FirebaseData.uploadImage(downloadUrl1, DateTime.now().toString());
       //Here you can get the download URL when the task has been completed.
       print("Download URL " + downloadUrl1.toString());
     } else {
@@ -161,6 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
