@@ -174,18 +174,21 @@ class Auth with ChangeNotifier {
     return true;
   }
   Future<void> logout() async{
+    print(_token+"before");
     _token=null;
     _userId=null;
     _expirydate=null;
     if(authTimer!=null){
       authTimer.cancel();
     }
+    print(_token);
     notifyListeners();
     var prefs=await SharedPreferences.getInstance();
     prefs.clear();
   }
 
   void autologout(){
+
     if(authTimer!=null){
       authTimer.cancel();
     }

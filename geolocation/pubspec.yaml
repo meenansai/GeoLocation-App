@@ -20,12 +20,16 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^4.1.2
-  google_maps_flutter: ^0.4.0
-  location: ^3.0.0
+  location: ^2.3.5
   # http: ^0.12.1
   http: 
   shared_preferences: ^0.5.7+3
   intl: ^0.16.1
+  google_maps_flutter: ^0.5.21+15
+  path_provider: ^1.1.0
+  path: ^1.6.2
+  firebase_storage: ^3.1.5
+  image_picker: ^0.6.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -41,6 +45,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+  - assets/images/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -64,6 +70,24 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/Raleway-Regular.ttf
+        - asset: assets/fonts/Raleway-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Raleway-Black.ttf
+          weight: 900
+          
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/RobotoCondensed-Regular.ttf
+        - asset: assets/fonts/RobotoCondensed-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/RobotoCondensed-Light.ttf
+          weight: 300
+        - asset: assets/fonts/RobotoCondensed-Italic.ttf
+          style: italic
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
