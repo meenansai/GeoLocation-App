@@ -6,10 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import '../providers/auth.dart';
 import '../utils/firebase_data.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import '../widgets/user_drawer.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/homeScreen';
@@ -28,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   var _isinit = true;
   var _isSharing = false;
   var _isEnable = true;
-  var uid = "-M7cmD0uw4HoZ10pIrXX";
+  // var uid = "-M7cmD0uw4HoZ10pIrXX";
+  
   ProgressDialog pr;
 
   StreamSubscription _locationSubscription;
@@ -83,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void getCurrentLocation() async {
+  void getCurrentLocation(String uid) async {
     try {
       Uint8List imageData = await getMarker();
       var location = await _locationTracker.getLocation();
@@ -128,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //Camera Module
   StorageReference storageReference = FirebaseStorage.instance.ref();
 
-  Future<void> _takePicture() async {
+  Future<void> _takePicture(String userId) async {
     var _imageFile = await ImagePicker.pickImage(
       source: ImageSource.camera,
       maxWidth: 600,
@@ -157,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
       StorageTaskSnapshot storageTaskSnapshot =
           await storageUploadTask.onComplete;
       final downloadUrl1 = await storageTaskSnapshot.ref.getDownloadURL();
-      FirebaseData.uploadImage(downloadUrl1, DateTime.now().toString());
+      FirebaseData.uploadImage(downloadUrl1, DateTime.now().toString(), userId);
       //Here you can get the download URL when the task has been completed.
       print("Download URL " + downloadUrl1.toString());
     } else {
@@ -168,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context);
+    var uid = Provider.of<Auth>(context).userid;
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
@@ -214,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const Icon(Icons.screen_share, size: 36.0),
                                 onPressed: () {
                                   _isEnable = false;
-                                  getCurrentLocation();
+                                  getCurrentLocation(uid);
                                   _isSharing = true;
                                 },
                               )
@@ -238,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           materialTapTargetSize: MaterialTapTargetSize.padded,
                           backgroundColor: Colors.blue,
                           child: const Icon(Icons.camera, size: 36.0),
-                          onPressed: _takePicture,
+                          onPressed:() => _takePicture(uid),
                         ),
                       ],
                     ),

@@ -10,16 +10,17 @@ class FirebaseData {
           'latitude': latitude,
           'longitude': longitude,
         }));
-    print("In FirebaseData: latitude: " + latitude.toString());
-    print("In FirebaseData: longitude: " + longitude.toString());
+    // print("In FirebaseData: latitude: " + latitude.toString());
+    // print("In FirebaseData: longitude: " + longitude.toString());
   }
 
-  static Future<void> uploadImage(imageUrl, capturedDate) async {
+  static Future<void> uploadImage(imageUrl, capturedDate, userId) async {
     var url = "https://geolocation-89f89.firebaseio.com/captured_images.json";
     await http.post(url,
         body: json.encode({
           'imageUrl': imageUrl,
           'capturedDate': capturedDate,
+          'userId': userId,
         }));
   }
 }
