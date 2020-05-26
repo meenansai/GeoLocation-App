@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:geolocation/providers/auth.dart';
 import 'package:geolocation/screens/home_screen.dart';
+import 'package:geolocation/screens/images_screen.dart';
 import 'package:geolocation/screens/usereditscreen.dart';
 import 'package:provider/provider.dart';
 import './screens/login_screen.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
               routes: {
                 HomeScreen.routeName: (ctx) => HomeScreen(),
                 UserDetails.routeName: (ctx) => UserDetails(),
+                ImageScreen.routeName : (ctx) => ImageScreen(),
                 UserProdEditScreen.routeName: (ctx) => UserProdEditScreen(),
               }),
         ));
