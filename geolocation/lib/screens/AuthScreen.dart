@@ -16,22 +16,41 @@ class AuthScreen extends StatelessWidget {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       body: 
-          SingleChildScrollView(
-            child: Center(
-              child: Container(
-                height: deviceSize.height,
-                width: deviceSize.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Flexible(
-                      flex: deviceSize.width > 600 ? 2 : 1,
-                      child: AuthCard(),
-                    ),
-                  ],
-                ),
+          Stack(
+            children: <Widget>[
+               Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  // Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
+                  // Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).accentColor.withAlpha(75),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: [0.25, 1],
               ),
             ),
+          ),
+              SingleChildScrollView(
+                child: Center(
+                  child: Container(
+                    height: deviceSize.height,
+                    width: deviceSize.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Flexible(
+                          flex: deviceSize.width > 600 ? 2 : 1,
+                          child: AuthCard(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
     );
   }

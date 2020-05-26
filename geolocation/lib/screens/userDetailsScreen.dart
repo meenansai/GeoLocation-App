@@ -33,7 +33,7 @@ class _UserDetailsState extends State<UserDetails> {
   @override
   Widget build(BuildContext context) {
     final id = ModalRoute.of(context).settings.arguments;
-    final user = Provider.of<UserProvider>(context);
+    final user = Provider.of<UserProvider>(context,listen: false);
     final User userSelected = user.getUser(id);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;

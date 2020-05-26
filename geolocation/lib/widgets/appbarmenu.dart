@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocation/providers/userProvider.dart';
 import 'package:geolocation/screens/images_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,7 @@ class AppBarMenu extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
+    
     return Drawer(
       child: Column(
         children: <Widget>[

@@ -74,10 +74,14 @@ class Auth with ChangeNotifier {
   }
 
   bool get isAdminCh{
+    print("checking admin");
     print(isadminCheck);
-    return isadminCheck==true;
+    return isadminCheck;
   }
-
+  Future<String> fetchUid() async{
+    var temp=await _userId;
+    return temp;
+  }
 
  
   // static Future<bool> isAdmin() async{
@@ -116,7 +120,6 @@ class Auth with ChangeNotifier {
     }
     // return _authenticate(email, password, 'signUp');
   }
-
   Future<void> login(email,password) async {
     final url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC52wCS2ORAXuqU4g4mxqfmG22XGKWB0IQ';
@@ -157,6 +160,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async{
+    print("trying auto login.............");
     final prefs=await SharedPreferences.getInstance();
     if(!prefs.containsKey('userData')){
       return false;
@@ -169,6 +173,9 @@ class Auth with ChangeNotifier {
     _token=extractedData['token'];
     _userId=extractedData['userId'];
     _expirydate=expiryDate;
+     var urls="https://geolocation-89f89.firebaseio.com/users/$_userId/isAdmin.json";
+      final resp=await http.get(urls);
+      isadminCheck=json.decode(resp.body);
     notifyListeners();
     autologout();
     return true;

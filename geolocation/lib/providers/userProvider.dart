@@ -100,6 +100,11 @@ class UserProvider with ChangeNotifier {
    
     return users[ind].isAdmin;
   }
+
+  String getAdminName(id){
+    var index=_users.indexWhere((element) => element.id==id);
+    return _users[index].name;
+  }
 }
 
 

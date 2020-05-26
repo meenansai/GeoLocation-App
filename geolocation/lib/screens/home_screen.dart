@@ -40,6 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Circle circle;
   GoogleMapController _controller;
 
+  
+
   @override
   void initState() {
     location.onLocationChanged().listen((value) {
@@ -171,16 +173,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context);
-    var uid = Provider.of<Auth>(context).userid;
+    var uid = Provider.of<Auth>(context,listen: false).userid;
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      drawer: UserDrawer(),
-      body: _initPosition == null
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+      drawer:UserDrawer(uid),
+      body:
+       _initPosition == null
+          ? Center(child: CircularProgressIndicator())
           : Stack(
               children: <Widget>[
                 GoogleMap(
@@ -200,12 +201,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(25.0),
                   // padding: EdgeInsets.only(bottom: 5, left: 4),
                   child: Align(
-                    alignment: Alignment.bottomRight,
+                    alignment: Alignment.bottomLeft,
                     child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         _isEnable
                             ? FloatingActionButton(
@@ -213,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // label: Text("Share"),
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.padded,
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Theme.of(context).accentColor,
                                 child:
                                     const Icon(Icons.screen_share, size: 36.0),
                                 onPressed: () {
@@ -240,16 +241,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           heroTag: "btn2",
                           //label: Text("Capture"),
                           materialTapTargetSize: MaterialTapTargetSize.padded,
-                          backgroundColor: Colors.blue,
+                          backgroundColor:Theme.of(context).accentColor,
                           child: const Icon(Icons.camera, size: 36.0),
                           onPressed:() => _takePicture(uid),
                         ),
                       ],
-                    ),
+                    ), 
+
                   ),
                 ),
               ],
             ),
-    );
+           );
   }
 }

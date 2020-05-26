@@ -3,7 +3,7 @@ import 'package:geolocation/widgets/appbarmenu.dart';
 import 'package:provider/provider.dart';
 import '../providers/userProvider.dart';
 import '../widgets/admin_listTileItem.dart';
-
+import '../providers/auth.dart';
 class AdminScreen extends StatefulWidget {
   @override
   _AdminScreenState createState() => _AdminScreenState();
@@ -13,13 +13,13 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   var _isinit=true;
   var _isLoading=false;
+  var userName;
   void didChangeDependencies() {
     if(_isinit){
     setState(() {
         _isLoading=true;
       });
-      Provider.of<UserProvider>(context).fetchItem().then((_){
-  
+      Provider.of<UserProvider>(context,listen: false).fetchItem().then((_){
         setState(() {
           _isLoading=false;
         });
@@ -29,7 +29,7 @@ class _AdminScreenState extends State<AdminScreen> {
     super.didChangeDependencies();
   }
   Widget build(BuildContext context) {
-    var usersList = Provider.of<UserProvider>(context);
+    var usersList = Provider.of<UserProvider>(context,listen: false);
     
     return Scaffold(
       drawer:AppBarMenu() ,

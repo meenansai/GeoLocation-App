@@ -1,19 +1,16 @@
 import "package:flutter/material.dart";
 import 'package:geolocation/providers/auth.dart';
+import 'package:geolocation/screens/change_password_screen.dart';
 import 'package:geolocation/screens/home_screen.dart';
 import 'package:geolocation/screens/images_screen.dart';
 import 'package:geolocation/screens/usereditscreen.dart';
 import 'package:provider/provider.dart';
-import './screens/login_screen.dart';
 import 'screens/admin_screen.dart';
-import 'screens/admin_screen.dart';
-import 'screens/login_screen.dart';
 import './providers/userProvider.dart';
 import './widgets/map.dart';
 import './screens/userDetailsScreen.dart';
-import './widgets/map.dart';
 import './screens/AuthScreen.dart';
-
+import './providers/image_provider.dart';
 void main() => runApp(
       MyApp(),
     );
@@ -30,14 +27,17 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (ctx) => Auth(),
           ),
+          ChangeNotifierProvider(
+            create: (ctx) => ImageProviders(),
+          ),
         ],
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Flutter Demo',
               theme: ThemeData(
-                primarySwatch: Colors.blue,
-                accentColor: Colors.blueAccent,
+                accentColor: Colors.amber,
+                primarySwatch: Colors.indigo,
                 fontFamily: 'Raleway',
                 textTheme: ThemeData.light().textTheme.copyWith(
                       body1: TextStyle(
@@ -65,8 +65,9 @@ class MyApp extends StatelessWidget {
               routes: {
                 HomeScreen.routeName: (ctx) => HomeScreen(),
                 UserDetails.routeName: (ctx) => UserDetails(),
-                ImageScreen.routeName : (ctx) => ImageScreen(),
+                ImageScreen.routeName: (ctx) => ImageScreen(),
                 UserProdEditScreen.routeName: (ctx) => UserProdEditScreen(),
+                ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
               }),
         ));
   }
@@ -80,7 +81,7 @@ class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('Loading...'),
+      body: Center(child: CircularProgressIndicator(),),
     );
   }
 }

@@ -38,7 +38,7 @@ class UserListItem extends StatelessWidget {
               child: FittedBox(
                 child:
                     Text(
-                      userName.substring(0, 1),
+                      userName.substring(0, 1).toUpperCase(),
                       style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
                     ),
               ),
@@ -53,7 +53,7 @@ class UserListItem extends StatelessWidget {
                   width: 5,
                 ),
                 
-                Provider.of<UserProvider>(context).isAdmin(userId)?
+                Provider.of<UserProvider>(context,listen: false).isAdmin(userId)?
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 5,vertical: 3),
                     decoration: BoxDecoration(

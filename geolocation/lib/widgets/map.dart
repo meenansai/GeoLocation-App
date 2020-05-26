@@ -23,7 +23,11 @@ class _MapScreenState extends State<MapScreen> {
     User userSelected = widget.user;
     return Stack(
       children: <Widget>[
-        GoogleMap(
+        userSelected.latitude==null?Container(
+          child: Center(
+            child: Text("User didnt update location"),
+          ),
+        ) :GoogleMap(
           // mapType: MapType.satellite,
           initialCameraPosition: CameraPosition(
             target: LatLng(userSelected.latitude, userSelected.longitude),
