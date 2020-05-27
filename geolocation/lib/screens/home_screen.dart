@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocation/screens/sharing_drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -13,6 +14,7 @@ import 'package:path/path.dart' as path;
 import '../widgets/user_drawer.dart';
 import 'package:provider/provider.dart';
 import '../providers/userProvider.dart';
+
 class HomeScreen extends StatefulWidget {
   static const routeName = '/homeScreen';
   @override
@@ -31,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var _isSharing = false;
   var _isEnable = true;
   // var uid = "-M7cmD0uw4HoZ10pIrXX";
-  
+
   ProgressDialog pr;
 
   StreamSubscription _locationSubscription;
@@ -51,16 +53,16 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_isinits) {
       print("before calling fetch:");
       await Provider.of<Auth>(context, listen: false).fetchUser();
-        
-        setState(() {
-          _isLoading = false;
-        });
+
+      setState(() {
+        _isLoading = false;
+      });
     }
     _isinits = false;
     super.didChangeDependencies();
   }
 
-  var isLoading=false;
+  var isLoading = false;
   //  void initState(){
   //    setState(() {
   //      isLoading=true;
@@ -73,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
   //   });
   //   super.initState();
   // }
-
 
   @override
   void initState() {
@@ -206,14 +207,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context);
-    var uid = Provider.of<Auth>(context,listen: false).userid;
+    var uid = Provider.of<Auth>(context, listen: false).userid;
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      drawer:UserDrawer(uid),
-      body:
-       _initPosition == null
+      drawer: _isEnable
+          ? UserDrawer(uid)
+          : SharingDrawer(),
+      body: _initPosition == null
           ? Center(child: CircularProgressIndicator())
           : Stack(
               children: <Widget>[
@@ -274,17 +276,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           heroTag: "btn2",
                           //label: Text("Capture"),
                           materialTapTargetSize: MaterialTapTargetSize.padded,
-                          backgroundColor:Theme.of(context).accentColor,
+                          backgroundColor: Theme.of(context).accentColor,
                           child: const Icon(Icons.camera, size: 36.0),
-                          onPressed:() => _takePicture(uid),
+                          onPressed: () => _takePicture(uid),
                         ),
                       ],
-                    ), 
-
+                    ),
                   ),
                 ),
               ],
             ),
-           );
+    );
   }
 }

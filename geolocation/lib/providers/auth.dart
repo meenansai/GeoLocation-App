@@ -59,13 +59,14 @@ class Auth with ChangeNotifier {
   //   return Future<bool>.value(isAdminVal);
   // }
   Future<void> fetchUser() async {
-    var url = "https://geolocation-89f89.firebaseio.com/users/$userid.json?auth=$_token";
+    var url =
+        "https://geolocation-89f89.firebaseio.com/users/$userid.json?auth=$_token";
     try {
       print("before http call");
       final response = await http.get(url);
       print(response.body);
       user = json.decode(response.body);
-      fetchedUser=User(
+      fetchedUser = User(
         id: userid,
         designation: user['designation'],
         email: user['email'],
@@ -74,6 +75,7 @@ class Auth with ChangeNotifier {
         longitude: user['longitude'],
         name: user['name'],
         phno: user['phone'],
+        profilePicture: user['profile_photo'],
       );
     } catch (error) {
       print("fetchUser: " + error);
@@ -100,7 +102,7 @@ class Auth with ChangeNotifier {
       _extraExpiryDate = DateTime.now().add(Duration(
         seconds: int.parse(respData['expiresIn']),
       ));
-      // autologout();
+      autologout();
       notifyListeners();
     } catch (error) {
       print("exception caused here: - " + error.toString());
@@ -132,7 +134,7 @@ class Auth with ChangeNotifier {
       _expirydate = DateTime.now().add(Duration(
         seconds: int.parse(respData['expiresIn']),
       ));
-      // autologout();
+      autologout();
       notifyListeners();
       var prefs = await SharedPreferences.getInstance();
       final userData = json.encode({
@@ -169,7 +171,7 @@ class Auth with ChangeNotifier {
     final resp = await http.get(urls);
     isadminCheck = json.decode(resp.body);
     notifyListeners();
-    // autologout();
+    autologout();
     return true;
   }
 
@@ -188,28 +190,28 @@ class Auth with ChangeNotifier {
   }
 
   Future<Null> changePassword(String newPassword) async {
-    final String changePasswordUrl ='https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyC52wCS2ORAXuqU4g4mxqfmG22XGKWB0IQ';
-    print("ChangePassword:Password: "+newPassword);
-    try{
-    var resp=await http.post(changePasswordUrl,body: json.encode({
-      'idToken': _token,
-      'password': newPassword,
-      'returnSecureToken': true
-    }));
-    print("password json response");
-    print(json.encode(resp.body));
-    var respData=json.encode(resp.body);
-    }
-    catch(error){
+    final String changePasswordUrl =
+        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyC52wCS2ORAXuqU4g4mxqfmG22XGKWB0IQ';
+    print("ChangePassword:Password: " + newPassword);
+    try {
+      var resp = await http.post(changePasswordUrl,
+          body: json.encode({
+            'idToken': _token,
+            'password': newPassword,
+            'returnSecureToken': true
+          }));
+      print("password json response");
+      print(json.encode(resp.body));
+      var respData = json.encode(resp.body);
+    } catch (error) {
       throw HttpException("Unable to change password");
     }
-    
   }
-  // void autologout() {
-  //   if (authTimer != null) {
-  //     authTimer.cancel();
-  //   }
-  //   final timeToExpiry = _expirydate.difference(DateTime.now()).inSeconds;
-  //   authTimer = Timer(Duration(seconds: timeToExpiry), logout);
-  // }
+  void autologout() {
+    if (authTimer != null) {
+      authTimer.cancel();
+    }
+    final timeToExpiry = _expirydate.difference(DateTime.now()).inSeconds;
+    authTimer = Timer(Duration(seconds: timeToExpiry), logout);
+  }
 }
