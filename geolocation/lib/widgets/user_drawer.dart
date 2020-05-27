@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocation/screens/userDetailsScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
@@ -21,7 +22,14 @@ class UserDrawer extends StatelessWidget {
         SizedBox(
           height: 3,
         ),
-        addDrawerList(Icon(Icons.home), 'Home', '/', context),
+        ListTile(
+          title: Text("Home"),
+          leading: Icon(Icons.home),
+          onTap: () {
+            Navigator.of(context).pushReplacementNamed('/');
+          },
+        ),
+        addDrawerList(Icon(Icons.person_pin), 'Profile', UserDetails.routeName, context),
         addDrawerList(
             Icon(Icons.border_color), 'Change Password', '/', context),
         // addDrawerList(Icon(Icons.keyboard_backspace), 'Logout', '/', context),
@@ -43,7 +51,7 @@ class UserDrawer extends StatelessWidget {
       title: Text(title),
       leading: icon,
       onTap: () {
-        Navigator.of(context).pushReplacementNamed(navroute);
+        Navigator.of(context).pushNamed(navroute);
       },
     );
   }
