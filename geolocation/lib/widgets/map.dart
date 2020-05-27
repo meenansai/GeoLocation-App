@@ -21,9 +21,16 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     User userSelected = widget.user;
+    print("user in map");
+    print(userSelected.name);
+    print(userSelected.id);
     return Stack(
       children: <Widget>[
-        GoogleMap(
+        userSelected.latitude==null?Container(
+          child: Center(
+            child: Text("User didnt update location"),
+          ),
+        ) :GoogleMap(
           // mapType: MapType.satellite,
           initialCameraPosition: CameraPosition(
             target: LatLng(userSelected.latitude, userSelected.longitude),
@@ -35,7 +42,6 @@ class _MapScreenState extends State<MapScreen> {
           onMapCreated: _onMapCreated,
           markers: Set.from([
             Marker(
-              
               markerId: MarkerId(userSelected.id + 'marker'),
               draggable: false,
               position: LatLng(userSelected.latitude, userSelected.longitude),

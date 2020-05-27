@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocation/models/change_password_model.dart';
 import 'package:geolocation/providers/auth.dart';
 import 'package:geolocation/providers/userProvider.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +23,8 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
   var isLoading = false;
   List<String> _roles = ['Admin', 'User'];
   String _selectedRole;
-  String newPassword;
-  String confirmPassword;
+  // String newPassword;
+  // String confirmPassword;
   String emailTemp;
   var initval = {
     'id': '',
@@ -34,6 +35,7 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
     'name': '',
     'phno': '',
   };
+  ChangePassword newPasswords = ChangePassword(newPassword: '', confirmPassword: '');
   User newUser = User(
     id: "",
     address: "",
@@ -42,6 +44,8 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
     isAdmin: false,
     name: "",
     phno: "",
+    latitude: null,
+    longitude: null,
   );
   @override
   void dispose() {
@@ -65,13 +69,21 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
     });
     if (newUser.id == null) {
       try {
-        // if paswd is == cnfrm pswd
-        //signup(email,pswd)
-        // await Provider.of<UserProvider>(context).additem(newUser);
-        await Provider.of<Auth>(context,listen: false).signup(emailTemp, confirmPassword);
-        var userId=Provider.of<Auth>(context,listen: false).extraUserId;
-        newUser.isAdmin=_selectedRole=="Admin";
-        await Provider.of<UserProvider>(context,listen: false).additem(newUser,userId);
+        // if (newPass.confirmPassword == newPass.newPassword) {
+          await Provider.of<Auth>(context, listen: false)
+              .signup(emailTemp, newPasswords.confirmPassword);
+        // } else {
+        //   showDialog(
+        //       context: context,
+        //       child: AlertDialog(
+        //         title: Text("Ohhh Nooo!!!!!"),
+        //         content: Text('Passwords Doesn\'t Match'),
+        //       ));
+        // }
+        var userId = Provider.of<Auth>(context, listen: false).extraUserId;
+        newUser.isAdmin = _selectedRole == "Admin";
+        await Provider.of<UserProvider>(context, listen: false)
+            .additem(newUser, userId);
       } catch (error) {
         await showDialog<Null>(
             context: context,
@@ -90,17 +102,7 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
             });
       }
       print("successful!!");
-      //  finally{
-      //     setState(() {
-      //       isLoading=false;
-      //     });
-      //     Navigator.of(context).pop();
-      //  }
     }
-    // else {
-    //   print(newProduct.id.toString() + ' so updating item');
-    //   await Provider.of<ProductProvider>(context).updateItem(newProduct.id, newProduct);
-    // }
     setState(() {
       isLoading = false;
     });
@@ -174,7 +176,7 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
                             designation: newUser.designation,
                             phno: newUser.phno,
                           );
-                          emailTemp=value;
+                          emailTemp = value;
                         },
                         validator: (value) {
                           if (value.isEmpty) {
@@ -187,77 +189,54 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
                           return null;
                         },
                       ),
-                      TextFormField(
-                        initialValue: '',
-                        decoration: InputDecoration(labelText: 'Password'),
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.text,
-                        focusNode: _passwordfocusnode,
-                        onFieldSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_confirmpasswordfocusnode);
-                        },
-                        obscureText: true,
-                        onSaved: (value) {
-                          
-                          newUser = User(
-                            name: newUser.name,
-                            email: newUser.email,
-                            address: newUser.address,
-                            designation: newUser.designation,
-                            phno: newUser.phno,
-                          );
-                          newPassword = value;
-                          
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please Enter a Password';
-                          }
-                          if (value.length < 6) {
-                            return 'Please Enter Password of atleast 6 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        initialValue: '',
-                        decoration:
-                            InputDecoration(labelText: 'Confirm Password'),
-                        keyboardType: TextInputType.text,
-                        focusNode: _confirmpasswordfocusnode,
-                        onFieldSubmitted: (_) {
-                          FocusScope.of(context)
-                              .requestFocus(_designationfocusnode);
-                        },
-                        obscureText: true,
-                        onSaved: (value) {
-                          newUser = User(
-                            name: newUser.name,
-                            email: newUser.email,
-                            address: newUser.address,
-                            designation: newUser.designation,
-                            phno: newUser.phno,
-                          );
-                          confirmPassword = value;
-                          
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please Enter Password.';
-                          }
-                          if (value.length < 6) {
-                            return 'Please Enter Password of atleast 6 characters';
-                          }
-                          if (newPassword==value) {
-                            return 'password does\'nt match';
-                          }
-                          // if (newPassword.compareTo(value) != 0) {
-                          //   return 'password does\'nt match';
-                          // }
-                          return null;
-                        },
-                      ),
+                       TextFormField(
+                          initialValue: '',
+                          decoration:
+                              InputDecoration(labelText: 'New Password'),
+                          textInputAction: TextInputAction.next,
+                          autofocus: true,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context)
+                                .requestFocus(_confirmpasswordfocusnode);
+                          },
+                          obscureText: true,
+                          onSaved: (value) {
+                            newPasswords = ChangePassword(
+                              newPassword: value,
+                              confirmPassword: newPasswords.confirmPassword,
+                            );
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter new password';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                        TextFormField(
+                          initialValue: '',
+                          decoration:
+                              InputDecoration(labelText: 'Confirm Password'),
+                          textInputAction: TextInputAction.done,
+                          onSaved: (value) {
+                            newPasswords = ChangePassword(
+                              newPassword: newPasswords.newPassword,
+                              confirmPassword: value,
+                            );
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter confirm password';
+                            }
+                            if (newPasswords.newPassword !=
+                                newPasswords.confirmPassword) {
+                              return 'Passwords doesn\'t match';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ), //--------
                       //------------------------
                       TextFormField(
                         initialValue: '',

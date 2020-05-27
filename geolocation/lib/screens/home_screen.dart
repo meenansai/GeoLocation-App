@@ -12,7 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import '../widgets/user_drawer.dart';
 import 'package:provider/provider.dart';
-
+import '../providers/userProvider.dart';
 class HomeScreen extends StatefulWidget {
   static const routeName = '/homeScreen';
   @override
@@ -39,6 +39,41 @@ class _HomeScreenState extends State<HomeScreen> {
   Marker marker;
   Circle circle;
   GoogleMapController _controller;
+
+  var _isLoading = false;
+  var _isinits = true;
+  User user;
+  @override
+  void didChangeDependencies() async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (_isinits) {
+      print("before calling fetch:");
+      await Provider.of<Auth>(context, listen: false).fetchUser();
+        
+        setState(() {
+          _isLoading = false;
+        });
+    }
+    _isinits = false;
+    super.didChangeDependencies();
+  }
+
+  var isLoading=false;
+  //  void initState(){
+  //    setState(() {
+  //      isLoading=true;
+  //    });
+  //   Future.delayed(Duration.zero).then((value) async {
+  //     await Provider.of<Auth>(context,listen: false).fetchUser();
+  //     setState(() {
+  //       isLoading=false;
+  //     });
+  //   });
+  //   super.initState();
+  // }
+
 
   @override
   void initState() {
@@ -171,16 +206,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context);
-    var uid = Provider.of<Auth>(context).userid;
+    var uid = Provider.of<Auth>(context,listen: false).userid;
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      drawer: UserDrawer(),
-      body: _initPosition == null
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+      drawer:UserDrawer(uid),
+      body:
+       _initPosition == null
+          ? Center(child: CircularProgressIndicator())
           : Stack(
               children: <Widget>[
                 GoogleMap(
@@ -200,12 +234,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(25.0),
                   // padding: EdgeInsets.only(bottom: 5, left: 4),
                   child: Align(
-                    alignment: Alignment.bottomRight,
+                    alignment: Alignment.bottomLeft,
                     child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         _isEnable
                             ? FloatingActionButton(
@@ -213,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // label: Text("Share"),
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.padded,
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Theme.of(context).accentColor,
                                 child:
                                     const Icon(Icons.screen_share, size: 36.0),
                                 onPressed: () {
@@ -240,16 +274,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           heroTag: "btn2",
                           //label: Text("Capture"),
                           materialTapTargetSize: MaterialTapTargetSize.padded,
-                          backgroundColor: Colors.blue,
+                          backgroundColor:Theme.of(context).accentColor,
                           child: const Icon(Icons.camera, size: 36.0),
                           onPressed:() => _takePicture(uid),
                         ),
                       ],
-                    ),
+                    ), 
+
                   ),
                 ),
               ],
             ),
-    );
+           );
   }
 }

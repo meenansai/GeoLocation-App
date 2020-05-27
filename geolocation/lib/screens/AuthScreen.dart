@@ -15,7 +15,23 @@ class AuthScreen extends StatelessWidget {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      body: 
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  // Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
+                  // Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).accentColor.withAlpha(75),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: [0.25, 1],
+              ),
+            ),
+          ),
           SingleChildScrollView(
             child: Center(
               child: Container(
@@ -33,6 +49,8 @@ class AuthScreen extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
     );
   }
 }
@@ -83,8 +101,9 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       if (_authMode == AuthMode.Login) {
-        await Provider.of<Auth>(context,listen: false).login(_authData['email'], _authData['password']);
-      } 
+        await Provider.of<Auth>(context, listen: false)
+            .login(_authData['email'], _authData['password']);
+      }
       // else {
       //   await Provider.of<Auth>(context)
       //       .signup(_authData['email'], _authData['password']);
@@ -176,8 +195,7 @@ class _AuthCardState extends State<AuthCard> {
                   CircularProgressIndicator()
                 else
                   RaisedButton(
-                    child:
-                        Text('LOGIN'),
+                    child: Text('LOGIN'),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),

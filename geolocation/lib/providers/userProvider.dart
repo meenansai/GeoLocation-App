@@ -68,6 +68,8 @@ class UserProvider with ChangeNotifier {
       if(retData==null){
         return;
       }
+      print("fetched data");
+      print(retData);
       retData.forEach((prodId, prodData) {
         tempUserList.add(
           User(
@@ -99,6 +101,11 @@ class UserProvider with ChangeNotifier {
     var ind= _users.indexWhere((element) => element.id==id);
    
     return users[ind].isAdmin;
+  }
+
+  String getAdminName(id){
+    var index=_users.indexWhere((element) => element.id==id);
+    return _users[index].name;
   }
 }
 
