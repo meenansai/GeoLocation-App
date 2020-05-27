@@ -12,13 +12,12 @@ class UserDrawer extends StatelessWidget {
   UserDrawer(this.userId);
   @override
   Widget build(BuildContext context) {
-    print(userId+"user id in user drawer");
-    // userName = FirebaseData.userName;
+    User user=Provider.of<Auth>(context).fetchedUser;
     return Drawer(
         child: Column(
       children: <Widget>[
         AppBar(
-          title: Text('Hello, User'),
+          title: Text('Hello, '+user.name),
           automaticallyImplyLeading: false,
         ),
         Divider(),

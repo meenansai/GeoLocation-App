@@ -68,6 +68,8 @@ class UserProvider with ChangeNotifier {
       if(retData==null){
         return;
       }
+      print("fetched data");
+      print(retData);
       retData.forEach((prodId, prodData) {
         tempUserList.add(
           User(

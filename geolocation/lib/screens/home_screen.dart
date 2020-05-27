@@ -12,7 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import '../widgets/user_drawer.dart';
 import 'package:provider/provider.dart';
-
+import '../providers/userProvider.dart';
 class HomeScreen extends StatefulWidget {
   static const routeName = '/homeScreen';
   @override
@@ -40,7 +40,39 @@ class _HomeScreenState extends State<HomeScreen> {
   Circle circle;
   GoogleMapController _controller;
 
-  
+  var _isLoading = false;
+  var _isinits = true;
+  User user;
+  @override
+  void didChangeDependencies() async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (_isinits) {
+      print("before calling fetch:");
+      await Provider.of<Auth>(context, listen: false).fetchUser();
+        setState(() {
+          _isLoading = false;
+        });
+    }
+    _isinits = false;
+    super.didChangeDependencies();
+  }
+
+  var isLoading=false;
+  //  void initState(){
+  //    setState(() {
+  //      isLoading=true;
+  //    });
+  //   Future.delayed(Duration.zero).then((value) async {
+  //     await Provider.of<Auth>(context,listen: false).fetchUser();
+  //     setState(() {
+  //       isLoading=false;
+  //     });
+  //   });
+  //   super.initState();
+  // }
+
 
   @override
   void initState() {

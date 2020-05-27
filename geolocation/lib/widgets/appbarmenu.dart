@@ -21,12 +21,13 @@ class AppBarMenu extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    
+    var id=Provider.of<Auth>(context).userid;
+    User admin=Provider.of<UserProvider>(context,listen: false).getUser(id);
     return Drawer(
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text('Hello, Admin'),
+            title: Text('Hello, '+admin.name),
             automaticallyImplyLeading: false,
           ),
           Divider(),
