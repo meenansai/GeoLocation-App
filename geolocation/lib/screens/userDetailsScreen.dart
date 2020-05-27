@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geolocation/providers/auth.dart';
 import 'package:geolocation/widgets/map.dart';
 import 'package:provider/provider.dart';
 
@@ -33,8 +34,11 @@ class _UserDetailsState extends State<UserDetails> {
   @override
   Widget build(BuildContext context) {
     final id = ModalRoute.of(context).settings.arguments;
+    print("user id in admin screen");
+    print(id);
     final user = Provider.of<UserProvider>(context,listen: false);
-    final User userSelected = user.getUser(id);
+    var isAdmin=Provider.of<Auth>(context,listen: false).isAdminCh;
+    final User userSelected =isAdmin? user.getUser(id):Provider.of<Auth>(context).fetchedUser;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     

@@ -15,10 +15,9 @@ class AuthScreen extends StatelessWidget {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      body: 
-          Stack(
-            children: <Widget>[
-               Container(
+      body: Stack(
+        children: <Widget>[
+          Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -33,25 +32,25 @@ class AuthScreen extends StatelessWidget {
               ),
             ),
           ),
-              SingleChildScrollView(
-                child: Center(
-                  child: Container(
-                    height: deviceSize.height,
-                    width: deviceSize.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Flexible(
-                          flex: deviceSize.width > 600 ? 2 : 1,
-                          child: AuthCard(),
-                        ),
-                      ],
+          SingleChildScrollView(
+            child: Center(
+              child: Container(
+                height: deviceSize.height,
+                width: deviceSize.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Flexible(
+                      flex: deviceSize.width > 600 ? 2 : 1,
+                      child: AuthCard(),
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
+        ],
+      ),
     );
   }
 }
@@ -102,8 +101,9 @@ class _AuthCardState extends State<AuthCard> {
     });
     try {
       if (_authMode == AuthMode.Login) {
-        await Provider.of<Auth>(context,listen: false).login(_authData['email'], _authData['password']);
-      } 
+        await Provider.of<Auth>(context, listen: false)
+            .login(_authData['email'], _authData['password']);
+      }
       // else {
       //   await Provider.of<Auth>(context)
       //       .signup(_authData['email'], _authData['password']);
@@ -195,8 +195,7 @@ class _AuthCardState extends State<AuthCard> {
                   CircularProgressIndicator()
                 else
                   RaisedButton(
-                    child:
-                        Text('LOGIN'),
+                    child: Text('LOGIN'),
                     onPressed: _submit,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),

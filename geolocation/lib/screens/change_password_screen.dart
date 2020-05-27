@@ -2,11 +2,9 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:geolocation/providers/userProvider.dart';
-import 'package:geolocation/utils/change_password.dart';
 import '../models/change_password_model.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth.dart';
-import '../utils/change_password.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   static const routeName = '/changePasswordScreen';
@@ -47,7 +45,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       // Scaffold.of(context).showSnackBar(SnackBar(content:Text("Changed Password",textAlign: TextAlign.center,)));
       
       Navigator.of(context).pop();
-    } catch (error) {
+    } 
+    catch (error) {
      showDialog(
         context: context,
         builder: (ctx) => AlertDialog(

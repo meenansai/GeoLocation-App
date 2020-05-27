@@ -66,6 +66,7 @@ class Auth with ChangeNotifier {
       print(response.body);
       user = json.decode(response.body);
       fetchedUser=User(
+        id: userid,
         designation: user['designation'],
         email: user['email'],
         isAdmin: user['isAdmin'],

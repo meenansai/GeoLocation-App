@@ -51,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_isinits) {
       print("before calling fetch:");
       await Provider.of<Auth>(context, listen: false).fetchUser();
+        
         setState(() {
           _isLoading = false;
         });
