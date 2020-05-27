@@ -3,6 +3,7 @@ import 'package:geolocation/providers/auth.dart';
 import 'package:geolocation/screens/change_password_screen.dart';
 import 'package:geolocation/screens/home_screen.dart';
 import 'package:geolocation/screens/images_screen.dart';
+import 'package:geolocation/screens/user_detail_admin_screen.dart';
 import 'package:geolocation/screens/usereditscreen.dart';
 import 'package:provider/provider.dart';
 import 'screens/admin_screen.dart';
@@ -36,8 +37,8 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'Flutter Demo',
               theme: ThemeData(
-                accentColor: Colors.amber,
                 primarySwatch: Colors.indigo,
+                accentColor: Colors.blueGrey,
                 fontFamily: 'Raleway',
                 textTheme: ThemeData.light().textTheme.copyWith(
                       body1: TextStyle(
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
                 HomeScreen.routeName: (ctx) => HomeScreen(),
                 UserDetails.routeName: (ctx) => UserDetails(),
                 ImageScreen.routeName: (ctx) => ImageScreen(),
+                UserDetailsAdmin.routeName: (ctx) => UserDetailsAdmin(),
                 UserProdEditScreen.routeName: (ctx) => UserProdEditScreen(),
                 ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
               }),
