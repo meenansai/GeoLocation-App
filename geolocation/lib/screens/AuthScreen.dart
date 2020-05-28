@@ -65,6 +65,7 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
+  final _passwordfocusnode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -132,6 +133,12 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   @override
+  void dispose() {
+    _passwordfocusnode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Card(
@@ -153,6 +160,10 @@ class _AuthCardState extends State<AuthCard> {
                 TextFormField(
                   decoration: InputDecoration(labelText: 'E-Mail'),
                   keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  onFieldSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(_passwordfocusnode);
+                  },
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
                       return 'Invalid email!';
@@ -164,7 +175,9 @@ class _AuthCardState extends State<AuthCard> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Password'),
+                  textInputAction: TextInputAction.done,
                   obscureText: true,
+                  focusNode: _passwordfocusnode,
                   controller: _passwordController,
                   validator: (value) {
                     if (value.isEmpty || value.length < 5) {
