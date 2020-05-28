@@ -109,7 +109,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       final start = DateTime.parse(documentsnapshot["signOut"].toDate().toString());
                       final stop =  DateTime.parse(documentsnapshot["signOut"].toDate().toString());
                       final date = DateFormat("dd-MMM-yyyy").format(start);
-                      final difference = stop.difference(start).inDays;
+                      final difference = stop.difference(start).inHours;
                       var s1,a1;
                         
                        if(documentsnapshot["currentLat"] != null && documentsnapshot["currentLong"] != null){
