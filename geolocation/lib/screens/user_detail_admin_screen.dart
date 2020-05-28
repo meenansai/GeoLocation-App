@@ -103,6 +103,15 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                       Icon(Icons.mail, size: 30), 'Email', userSelected.email),
                   buildTile(Icon(Icons.phone, size: 30), 'Phone Number',
                       userSelected.phno),
+                       RaisedButton(
+                       child: Text(" get report"),
+                       onPressed: () {
+                         
+                                                  Navigator.of(context).pushNamed(
+                                     '/report',
+                                      arguments: userSelected.id,
+                                    );}
+                                               ),
                   SizedBox(
                     height: 20,
                   ),

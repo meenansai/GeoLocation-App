@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocation/screens/change_password_screen.dart';
 import 'package:geolocation/screens/userDetailsScreen.dart';
@@ -10,6 +11,7 @@ import '../providers/userProvider.dart';
 class UserDrawer extends StatelessWidget {
   var userId;
   var userName;
+  var reported = false;
   UserDrawer(this.userId);
   @override
   Widget build(BuildContext context) {
@@ -58,21 +60,54 @@ class UserDrawer extends StatelessWidget {
           leading: Icon(Icons.keyboard_backspace),
           onTap: () {
             // Navigator.of(context).pop();
+            updateReport(user, userId);
             Navigator.of(context).pushReplacementNamed('/');
             Provider.of<Auth>(context, listen: false).logout();
           },
         ),
-      ],
-    ));
-  }
+        ListTile(
+          title: Text("Report"),
+          leading:  reported?  Icon(Icons.turned_in):Icon(Icons.turned_in_not),
+          onTap: () {
+          addReport(user, userId);
+                     Scaffold.of(context).showSnackBar(SnackBar(
+                     content: Text("Reported successfully to the admin"),
+                      ));
+                      },
+                    ),
+                ],
+              ));
+            }
+          
+            ListTile addDrawerList(Icon icon, String title, navroute, context, arg) {
+              return ListTile(
+                title: Text(title),
+                leading: icon,
+                onTap: () {
+                  Navigator.of(context).pushNamed(navroute, arguments: arg);
+                },
+              );
+            }
+          
+            addReport(User userSelected, var uid) async{
+              Firestore.instance.collection("Reports").document(uid).collection('userReports').add({
+          'name': userSelected.name,
+          'currentLong':userSelected.longitude,
+          'currentLat': userSelected.latitude,
+          'signIn': DateTime.now(),
+          
+            'signOut':  DateTime.now(), 
+        }); }
 
-  ListTile addDrawerList(Icon icon, String title, navroute, context, arg) {
-    return ListTile(
-      title: Text(title),
-      leading: icon,
-      onTap: () {
-        Navigator.of(context).pushNamed(navroute, arguments: arg);
-      },
-    );
-  }
+        static void updateReport(User userSelected, var uid) async{
+                QuerySnapshot postRef = await Firestore.instance.collection('Reports')
+                    .document(uid)
+                    .collection('userReports')
+                    .orderBy('signIn',descending: true)
+                    .limit(1).getDocuments();
+                postRef.documents.forEach((doc) {
+                  doc.reference.updateData({'signOut':  DateTime.now()});
+                  });
+                
+                }
 }

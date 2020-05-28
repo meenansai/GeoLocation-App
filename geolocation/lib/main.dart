@@ -3,6 +3,7 @@ import 'package:geolocation/providers/auth.dart';
 import 'package:geolocation/screens/change_password_screen.dart';
 import 'package:geolocation/screens/home_screen.dart';
 import 'package:geolocation/screens/images_screen.dart';
+import 'package:geolocation/screens/report_screen.dart';
 import 'package:geolocation/screens/user_detail_admin_screen.dart';
 import 'package:geolocation/screens/usereditscreen.dart';
 import 'package:provider/provider.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
                 UserDetailsAdmin.routeName: (ctx) => UserDetailsAdmin(),
                 UserProdEditScreen.routeName: (ctx) => UserProdEditScreen(),
                 ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
+                '/report': (ctx) => ReportScreen(),
               }),
         ));
   }
