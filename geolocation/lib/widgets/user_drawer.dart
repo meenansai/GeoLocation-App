@@ -58,6 +58,7 @@ class UserDrawer extends StatelessWidget {
             print(user.latitude);
             print(user.longitude);
             addReport();
+            Navigator.of(context).pop();
             Scaffold.of(context).hideCurrentSnackBar();
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text("Reported successfully to the admin"),
