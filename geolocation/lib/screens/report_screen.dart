@@ -37,8 +37,6 @@ class _ReportScreenState extends State<ReportScreen> {
               //     RaisedButton(
 
               //       child: Text("Today"),
-              //       onPressed: () => {button = "Today"},
-              //     ),
               //     RaisedButton(
               //       child: Text("Week"),
               //      onPressed: () => button = "Week",
@@ -55,7 +53,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 child: StreamBuilder(
                     stream: Firestore.instance
                         .collection('Reports')
-                        .document(userSelected.id)
+                        .document(id)
                         .collection('userReports')
                         .snapshots(),
                     builder: (context, snapshot) {
@@ -106,16 +104,22 @@ class _ReportScreenState extends State<ReportScreen> {
         documentsnapshot["currentLong"] != null) {
       final coordinates = new Coordinates(
           documentsnapshot["currentLat"], documentsnapshot["currentLong"]);
+      print('co-ordiates');
+      print(coordinates);
       findAdress(coordinates);
-      s1 = this.street;
-      a1 = this.area;
+      // setState(() {
+      // s1 = null ? '' : street;
+      // a1 = area;
+      // });
+      // s1=coordinates.latitude.toString();
+      // a1=coordinates.longitude.toString();
     }
 
     return [
       DataCell(Text(date.toString())),
       DataCell(Text(difference.toString() + " mins")),
-      DataCell(Text(s1 != null ? s1 : "not available")),
-      DataCell(Text(a1 != null ? a1 : "not available")),
+      DataCell(Text(street != null ? street : "not available")),
+      DataCell(Text(area != null ? area : "not available")),
     ].toList();
   }
 
@@ -135,10 +139,10 @@ class _ReportScreenState extends State<ReportScreen> {
       var first = results.first;
       var street = first.featureName;
       var area = first.subLocality;
-      this.setState(() {
-        this.results = results;
-        this.street = street;
-        this.area = area;
+      setState(() {
+        results = results;
+        street = street;
+        area = area;
       });
       // print(area);
     } catch (e) {

@@ -53,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_isinits) {
       print("before calling fetch:");
       await Provider.of<Auth>(context, listen: false).fetchUser();
-
       setState(() {
         _isLoading = false;
       });
@@ -138,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (_isSharing) {
           FirebaseData.updateLatLng(
               uid, newLocalData.latitude, newLocalData.longitude);
+              Provider.of<Auth>(context,listen: false).updateFetchedUser( newLocalData.latitude, newLocalData.longitude);
         }
         if (_controller != null) {
           _controller.animateCamera(CameraUpdate.newCameraPosition(
@@ -266,7 +266,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 backgroundColor: Colors.red,
                                 child: const Icon(Icons.stop_screen_share,
                                     size: 36.0),
-                                onPressed: () {
+                                onPressed: () async{
+                                  await Provider.of<Auth>(context,listen: false).fetchUser();
                                   _isEnable = true;
                                   _isSharing = false;
                                 },

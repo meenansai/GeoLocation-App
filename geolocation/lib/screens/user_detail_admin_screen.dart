@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:geolocation/providers/auth.dart';
 import 'package:geolocation/widgets/map.dart';
 import 'package:provider/provider.dart';
- 
+
 import '../providers/userProvider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
- 
+
+import 'report_screen.dart';
+
 class UserDetailsAdmin extends StatefulWidget {
   static const routeName = '/userDetailsAdmin';
- 
+
   @override
   _UserDetailsAdminState createState() => _UserDetailsAdminState();
 }
- 
+
 class _UserDetailsAdminState extends State<UserDetailsAdmin> {
- 
- 
   Widget buildTile(Icon icon, String title, String value) {
     return Card(
       elevation: 3,
@@ -30,21 +30,21 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
       ),
     );
   }
- 
+
   @override
   Widget build(BuildContext context) {
     final id = ModalRoute.of(context).settings.arguments;
     print("user id in admin screen");
     print(id);
-    final user = Provider.of<UserProvider>(context,listen: false);
-    var isAdmin=Provider.of<Auth>(context,listen: false).isAdminCh;
-    final User userSelected =isAdmin? user.getUser(id):Provider.of<Auth>(context).fetchedUser;
+    final user = Provider.of<UserProvider>(context, listen: false);
+    var isAdmin = Provider.of<Auth>(context, listen: false).isAdminCh;
+    final User userSelected =user.getUser(id);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-   
+
     var padding = MediaQuery.of(context).padding;
     double height1 = height - padding.top - padding.bottom;
-    double heightMap=height1/3.25;
+    double heightMap = height1 / 3.25;
     return Scaffold(
         appBar: AppBar(
           title: Text('Details'),
@@ -56,21 +56,20 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
               //   height: height1/3,
               //   width: width,
               //   // decoration: BoxDecoration(color: Colors.blueGrey),
- 
+
               // ),
-               Container(
-                    height: heightMap,
-                    width: width,
-                    child: Card(
-                      elevation: 5,
-                      child:
-                      MapScreen(userSelected),
-                    ),
-                  ),
+              Container(
+                height: heightMap,
+                width: width,
+                child: Card(
+                  elevation: 5,
+                  child: MapScreen(userSelected),
+                ),
+              ),
               Column(
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(top: heightMap-80,right: 50),
+                    margin: EdgeInsets.only(top: heightMap - 80, right: 50),
                     height: 125,
                     child: Align(
                       alignment: Alignment.centerRight,
@@ -103,28 +102,20 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                       Icon(Icons.mail, size: 30), 'Email', userSelected.email),
                   buildTile(Icon(Icons.phone, size: 30), 'Phone Number',
                       userSelected.phno),
-                       RaisedButton(
-                       child: Text(" get report"),
-                       onPressed: () {
-                         
-                                                  Navigator.of(context).pushNamed(
-                                     '/report',
-                                      arguments: userSelected.id,
-                                    );}
-                                               ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  RaisedButton(
+                      child: Text(" get report"),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          ReportScreen.routeName,
+                          arguments: id,
+                        );
+                      }),
                   SizedBox(
                     height: 20,
                   ),
-                  // Container(
-                  //   margin: EdgeInsets.all(20),
-                  //   height: 400,
-                  //   width: double.infinity,
-                  //   child: Card(
-                  //     elevation: 5,
-                  //     child:
-                  //     MapScreen(userSelected),
-                  //   ),
-                  // ),
                 ],
               ),
             ],

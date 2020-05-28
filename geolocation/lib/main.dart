@@ -13,6 +13,7 @@ import './widgets/map.dart';
 import './screens/userDetailsScreen.dart';
 import './screens/AuthScreen.dart';
 import './providers/image_provider.dart';
+import 'screens/report_screen.dart';
 void main() => runApp(
       MyApp(),
     );
@@ -71,7 +72,7 @@ class MyApp extends StatelessWidget {
                 UserDetailsAdmin.routeName: (ctx) => UserDetailsAdmin(),
                 UserProdEditScreen.routeName: (ctx) => UserProdEditScreen(),
                 ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
-                '/report': (ctx) => ReportScreen(),
+                ReportScreen.routeName: (ctx) => ReportScreen(),
               }),
         ));
   }

@@ -13,27 +13,21 @@ class UserDrawer extends StatelessWidget {
   var userName;
   var reported = false;
   UserDrawer(this.userId);
+  User user;
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<Auth>(context).fetchedUser;
-    print("user id in drawer");
-    print(userId);
+    user = Provider.of<Auth>(context,listen: false).fetchedUser;
     return Drawer(
         child: Column(
       children: <Widget>[
         AppBar(
-          title: Text('Hello, ' + user.name),
+          title: Text('Hello, ' + user.latitude.toString()),
           automaticallyImplyLeading: false,
         ),
         Divider(),
         SizedBox(
           height: 3,
         ),
-        // addDrawerList(Icon(Icons.home), 'Home', '/', context, ""),
-        // addDrawerList(Icon(Icons.person), 'Profile', UserDetails.routeName,
-        //     context, user.id),
-        // addDrawerList(Icon(Icons.border_color), 'Change Password',
-        //     ChangePasswordScreen.routeName, context, ""),
         ListTile(
           title: Text("Home"),
           leading: Icon(Icons.home),
@@ -45,7 +39,8 @@ class UserDrawer extends StatelessWidget {
           title: Text("profile"),
           leading: Icon(Icons.person),
           onTap: () {
-            Navigator.of(context).pushNamed(UserDetails.routeName,arguments: userId);
+            Navigator.of(context)
+                .pushNamed(UserDetails.routeName, arguments: userId);
           },
         ),
         ListTile(
@@ -55,17 +50,20 @@ class UserDrawer extends StatelessWidget {
             Navigator.of(context).pushNamed(ChangePasswordScreen.routeName);
           },
         ),
-         ListTile(
+        ListTile(
           title: Text("Report"),
-          leading:  reported?  Icon(Icons.turned_in):Icon(Icons.turned_in_not),
+          leading: reported ? Icon(Icons.turned_in) : Icon(Icons.turned_in_not),
           onTap: () {
-          addReport(user, userId);
-                     Scaffold.of(context).showSnackBar(SnackBar(
-                     content: Text("Reported successfully to the admin"),
-                     duration: Duration(seconds: 1),
-                      ));
-                      },
-                    ),
+            print('uploading coordinates');
+            print(user.latitude);
+            print(user.longitude);
+            addReport();
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text("Reported successfully to the admin"),
+              duration: Duration(seconds: 1),
+            ));
+          },
+        ),
         ListTile(
           title: Text("Logout"),
           leading: Icon(Icons.keyboard_backspace),
@@ -76,40 +74,57 @@ class UserDrawer extends StatelessWidget {
             Provider.of<Auth>(context, listen: false).logout();
           },
         ),
-       
-                ],
-              ));
-            }
-          
-            ListTile addDrawerList(Icon icon, String title, navroute, context, arg) {
-              return ListTile(
-                title: Text(title),
-                leading: icon,
-                onTap: () {
-                  Navigator.of(context).pushNamed(navroute, arguments: arg);
-                },
-              );
-            }
-          
-            addReport(User userSelected, var uid) async{
-              Firestore.instance.collection("Reports").document(uid).collection('userReports').add({
-          'name': userSelected.name,
-          'currentLong':userSelected.longitude,
-          'currentLat': userSelected.latitude,
-          'signIn': DateTime.now(),
-          
-            'signOut':  DateTime.now(), 
-        }); }
+      ],
+    ));
+  }
 
-        static void updateReport(User userSelected, var uid) async{
-                QuerySnapshot postRef = await Firestore.instance.collection('Reports')
-                    .document(uid)
-                    .collection('userReports')
-                    .orderBy('signIn',descending: true)
-                    .limit(1).getDocuments();
-                postRef.documents.forEach((doc) {
-                  doc.reference.updateData({'signOut':  DateTime.now()});
-                  });
-                
-                }
+  ListTile addDrawerList(Icon icon, String title, navroute, context, arg) {
+    return ListTile(
+      title: Text(title),
+      leading: icon,
+      onTap: () {
+        Navigator.of(context).pushNamed(navroute, arguments: arg);
+      },
+    );
+  }
+
+  // addReport(User userSelected, var uid) async {
+  //   Firestore.instance
+  //       .collection("Reports")
+  //       .document(uid)
+  //       .collection('userReports')
+  //       .add({
+  //     'name': userSelected.name,
+  //     'currentLong': userSelected.longitude,
+  //     'currentLat': userSelected.latitude,
+  //     'signIn': DateTime.now(),
+  //     'signOut': DateTime.now(),
+  //   });
+  // }
+ void addReport() async {
+    Firestore.instance
+        .collection("Reports")
+        .document(user.id)
+        .collection('userReports')
+        .add({
+      'name': user.name,
+      'currentLong': user.longitude,
+      'currentLat': user.latitude,
+      'signIn': DateTime.now(),
+      'signOut': DateTime.now(),
+    });
+  }
+
+  void updateReport(User userSelected, var uid) async {
+    QuerySnapshot postRef = await Firestore.instance
+        .collection('Reports')
+        .document(user.id)
+        .collection('userReports')
+        .orderBy('signIn', descending: true)
+        .limit(1)
+        .getDocuments();
+    postRef.documents.forEach((doc) {
+      doc.reference.updateData({'signOut': DateTime.now()});
+    });
+  }
 }

@@ -82,6 +82,12 @@ class Auth with ChangeNotifier {
     }
   }
 
+  void updateFetchedUser(lat,lon){
+    fetchedUser.latitude=lat;
+    fetchedUser.longitude=lon;
+    notifyListeners();
+  }
+
   Future<void> signup(String email, String password) async {
     final url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyC52wCS2ORAXuqU4g4mxqfmG22XGKWB0IQ';
