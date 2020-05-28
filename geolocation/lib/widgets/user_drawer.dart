@@ -21,7 +21,7 @@ class UserDrawer extends StatelessWidget {
         child: Column(
       children: <Widget>[
         AppBar(
-          title: Text('Hello, ' + user.latitude.toString()),
+          title: Text('Hello, ' + user.name),
           automaticallyImplyLeading: false,
         ),
         Divider(),
@@ -58,6 +58,7 @@ class UserDrawer extends StatelessWidget {
             print(user.latitude);
             print(user.longitude);
             addReport();
+            Scaffold.of(context).hideCurrentSnackBar();
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text("Reported successfully to the admin"),
               duration: Duration(seconds: 1),

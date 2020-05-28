@@ -81,8 +81,9 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100)),
                             child: ClipOval(
-                              child: Image.network(
-                                  'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg'),
+                              child:userSelected.profilePicture==null? Image.network(
+                                  'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg')
+                                  :Image.network(userSelected.profilePicture)
                             )),
                       ),
                     ),
