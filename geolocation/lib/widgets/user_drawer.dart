@@ -55,6 +55,17 @@ class UserDrawer extends StatelessWidget {
             Navigator.of(context).pushNamed(ChangePasswordScreen.routeName);
           },
         ),
+         ListTile(
+          title: Text("Report"),
+          leading:  reported?  Icon(Icons.turned_in):Icon(Icons.turned_in_not),
+          onTap: () {
+          addReport(user, userId);
+                     Scaffold.of(context).showSnackBar(SnackBar(
+                     content: Text("Reported successfully to the admin"),
+                     duration: Duration(seconds: 1),
+                      ));
+                      },
+                    ),
         ListTile(
           title: Text("Logout"),
           leading: Icon(Icons.keyboard_backspace),
@@ -65,16 +76,7 @@ class UserDrawer extends StatelessWidget {
             Provider.of<Auth>(context, listen: false).logout();
           },
         ),
-        ListTile(
-          title: Text("Report"),
-          leading:  reported?  Icon(Icons.turned_in):Icon(Icons.turned_in_not),
-          onTap: () {
-          addReport(user, userId);
-                     Scaffold.of(context).showSnackBar(SnackBar(
-                     content: Text("Reported successfully to the admin"),
-                      ));
-                      },
-                    ),
+       
                 ],
               ));
             }
