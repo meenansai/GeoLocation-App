@@ -4,16 +4,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocation/providers/auth.dart';
 import 'package:geolocation/utils/firebase_data.dart';
-import 'package:geolocation/widgets/map.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../providers/userProvider.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../utils/image_util.dart';
 import 'package:path/path.dart' as path;
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 class UserDetails extends StatefulWidget {
   static const routeName = '/userdetails';

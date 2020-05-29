@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocation/screens/change_password_screen.dart';
 import 'package:geolocation/screens/userDetailsScreen.dart';
-import 'package:geolocation/utils/firebase_data.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';

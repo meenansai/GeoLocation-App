@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geolocation/providers/auth.dart';
 import '../screens/user_detail_admin_screen.dart';
 import 'package:provider/provider.dart';
-import '../screens/userDetailsScreen.dart';
 import '../providers/userProvider.dart';
 class UserListItem extends StatelessWidget {
   final String userId;

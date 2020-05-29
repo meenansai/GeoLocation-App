@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:geolocation/providers/userProvider.dart';
 import '../models/change_password_model.dart';
