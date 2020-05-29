@@ -208,7 +208,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context);
     var uid = Provider.of<Auth>(context, listen: false).userid;
-    return Scaffold(
+    return _isLoading?
+    Scaffold(
+      appBar: AppBar(title: Text('Welcome'),),
+      body: Center(
+        child: CircularProgressIndicator(),),
+    )
+    
+    : Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
