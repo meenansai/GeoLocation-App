@@ -34,7 +34,7 @@ class AppBarMenu extends StatelessWidget {
           SizedBox(
             height: 5,
           ),
-          buildMenuItems(Icon(Icons.home), 'Add User',
+          buildMenuItems(Icon(Icons.person_add), 'Add User',
               UserProdEditScreen.routeName, context),
           buildMenuItems(
               Icon(Icons.image), 'Images', ImageScreen.routeName, context),

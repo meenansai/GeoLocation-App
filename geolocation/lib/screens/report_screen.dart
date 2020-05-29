@@ -18,77 +18,77 @@ class _ReportScreenState extends State<ReportScreen> {
   var button = "today";
 
   @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     final id = ModalRoute.of(context).settings.arguments;
     final user = Provider.of<UserProvider>(context);
     final User userSelected = user.getUser(id);
     return Scaffold(
-        appBar: AppBar(
-          title: Text("User Report"),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              // Padding(
-              //   padding: const EdgeInsets.only(top:30.0, left:2.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: <Widget>[
-              //     RaisedButton(
-
-              //       child: Text("Today"),
-              //       onPressed: () => {button = "Today"},
-              //     ),
-              //     RaisedButton(
-              //       child: Text("Week"),
-              //      onPressed: () => button = "Week",
-              //     ),
-              //     RaisedButton(
-
-              //       child: Text("Month"),
-              //       onPressed: () => button = "Month",
-              //     ),
-              //   ],),
-              // ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: StreamBuilder(
-                    stream: Firestore.instance
-                        .collection('Reports')
-                        .document(userSelected.id)
-                        .collection('userReports')
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData)
-                        return Center(child: CircularProgressIndicator());
-
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 28.0, left: 14.0),
-                        child: SingleChildScrollView(
-                          child: Container(
-                            child: DataTable(
-                              rows: _createRows(snapshot.data),
-                              columns: [
-                                DataColumn(
-                                  label: Text("Date"),
-                                ),
-                                DataColumn(
-                                    label:
-                                        Flexible(child: Text("Working Hours"))),
-                                DataColumn(
-                                  label: Text("Street"),
-                                ),
-                                DataColumn(
-                                  label: Text("Area"),
-                                ),
-                              ],
-                            ),
-                          ),
+        // appBar: AppBar(
+        //   title: Text("User Report"),
+        // ),
+        body: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.indigo, width: 10)),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.white, width: 10)),
+            child: Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueGrey, width: 10)),
+              child: SingleChildScrollView(
+                              child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(top: 25),
+                        child: Text('User Report',style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          fontFamily: 'Raleway'
+                        ),)
                         ),
-                      );
-                    }),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: StreamBuilder(
+                            stream: Firestore.instance
+                                .collection('Reports')
+                                .document(id)
+                                .collection('userReports')
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData)
+                                return Center(child: CircularProgressIndicator());
+
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 28.0, left: 14.0),
+                                child: SingleChildScrollView(
+                                  child: Container(
+                                    child: DataTable(
+                                      rows: _createRows(snapshot.data),
+                                      columns: [
+                                        DataColumn(
+                                          label: Text("Date"),
+                                        ),
+                                        DataColumn(
+                                            label: Flexible(
+                                                child: Text("Working Hours"))),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ],
+            ),
           ),
         ));
   }
@@ -106,17 +106,12 @@ class _ReportScreenState extends State<ReportScreen> {
         documentsnapshot["currentLong"] != null) {
       final coordinates = new Coordinates(
           documentsnapshot["currentLat"], documentsnapshot["currentLong"]);
-      findAdress(coordinates);
-      s1 = this.street;
-      a1 = this.area;
+      return [
+        DataCell(Text(date.toString())),
+        DataCell(Text(difference.toString() + " mins")),
+      ].toList();
+      // print(area);
     }
-
-    return [
-      DataCell(Text(date.toString())),
-      DataCell(Text(difference.toString() + " mins")),
-      DataCell(Text(s1 != null ? s1 : "not available")),
-      DataCell(Text(a1 != null ? a1 : "not available")),
-    ].toList();
   }
 
   List<DataRow> _createRows(QuerySnapshot snapshot) {
@@ -126,23 +121,5 @@ class _ReportScreenState extends State<ReportScreen> {
     }).toList();
 
     return newList;
-  }
-
-  findAdress(Coordinates coordinates) async {
-    try {
-      var results =
-          await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      var first = results.first;
-      var street = first.featureName;
-      var area = first.subLocality;
-      this.setState(() {
-        this.results = results;
-        this.street = street;
-        this.area = area;
-      });
-      // print(area);
-    } catch (e) {
-      print("Error occured: $e");
-    }
   }
 }

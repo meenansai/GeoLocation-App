@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocation/providers/auth.dart';
 import 'package:geolocation/widgets/map.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/userProvider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'report_screen.dart';
 
 class UserDetailsAdmin extends StatefulWidget {
   static const routeName = '/userDetailsAdmin';
@@ -34,8 +38,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
     print(id);
     final user = Provider.of<UserProvider>(context, listen: false);
     var isAdmin = Provider.of<Auth>(context, listen: false).isAdminCh;
-    final User userSelected =
-        isAdmin ? user.getUser(id) : Provider.of<Auth>(context).fetchedUser;
+    final User userSelected =user.getUser(id);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -78,8 +81,9 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100)),
                             child: ClipOval(
-                              child: Image.network(
-                                  'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg'),
+                              child:userSelected.profilePicture==null? Image.network(
+                                  'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg')
+                                  :Image.network(userSelected.profilePicture)
                             )),
                       ),
                     ),
@@ -99,27 +103,20 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                       Icon(Icons.mail, size: 30), 'Email', userSelected.email),
                   buildTile(Icon(Icons.phone, size: 30), 'Phone Number',
                       userSelected.phno),
+                  SizedBox(
+                    height: 12,
+                  ),
                   RaisedButton(
                       child: Text(" get report"),
                       onPressed: () {
                         Navigator.of(context).pushNamed(
-                          '/report',
-                          arguments: userSelected.id,
+                          ReportScreen.routeName,
+                          arguments: id,
                         );
                       }),
                   SizedBox(
                     height: 20,
                   ),
-                  // Container(
-                  //   margin: EdgeInsets.all(20),
-                  //   height: 400,
-                  //   width: double.infinity,
-                  //   child: Card(
-                  //     elevation: 5,
-                  //     child:
-                  //     MapScreen(userSelected),
-                  //   ),
-                  // ),
                 ],
               ),
             ],

@@ -9,8 +9,8 @@ class User {
   final String name;
   final String address;
   final String designation;
-  final double latitude;
-  final double longitude;
+  double latitude;
+  double longitude;
   final String email;
   final String phno;
   final String profilePicture;
