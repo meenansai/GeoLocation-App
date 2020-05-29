@@ -26,70 +26,70 @@ class _ReportScreenState extends State<ReportScreen> {
         appBar: AppBar(
           title: Text("User Report"),
         ),
-        body: Column(
-          children: <Widget>[
-            // Padding(
-            //   padding: const EdgeInsets.only(top:30.0, left:2.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: <Widget>[
-            //     RaisedButton(
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              // Padding(
+              //   padding: const EdgeInsets.only(top:30.0, left:2.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: <Widget>[
+              //     RaisedButton(
 
-            //       child: Text("Today"),
-            //       onPressed: () => {button = "Today"},
-            //     ),
-            //     RaisedButton(
-            //       child: Text("Week"),
-            //      onPressed: () => button = "Week",
-            //     ),
-            //     RaisedButton(
+              //       child: Text("Today"),
+              //       onPressed: () => {button = "Today"},
+              //     ),
+              //     RaisedButton(
+              //       child: Text("Week"),
+              //      onPressed: () => button = "Week",
+              //     ),
+              //     RaisedButton(
 
-            //       child: Text("Month"),
-            //       onPressed: () => button = "Month",
-            //     ),
-            //   ],),
-            // ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: StreamBuilder(
-                  stream: Firestore.instance
-                      .collection('Reports')
-                      .document(userSelected.id)
-                      .collection('userReports')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+              //       child: Text("Month"),
+              //       onPressed: () => button = "Month",
+              //     ),
+              //   ],),
+              // ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: StreamBuilder(
+                    stream: Firestore.instance
+                        .collection('Reports')
+                        .document(userSelected.id)
+                        .collection('userReports')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
 
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 28.0, left: 14.0),
-                      child: SingleChildScrollView(
-                        child: Container(
-                          child: DataTable(
-                            rows: _createRows(snapshot.data),
-                            columns: [
-                              DataColumn(
-                                label: Text("Date"),
-                              ),
-                              DataColumn(
-                                  label:
-                                      Flexible(child: Text("Working Hours"))),
-                              DataColumn(
-                                label: Text("Street"),
-                              ),
-                              DataColumn(
-                                label: Text("Area"),
-                              ),
-                            ],
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 28.0, left: 14.0),
+                        child: SingleChildScrollView(
+                          child: Container(
+                            child: DataTable(
+                              rows: _createRows(snapshot.data),
+                              columns: [
+                                DataColumn(
+                                  label: Text("Date"),
+                                ),
+                                DataColumn(
+                                    label:
+                                        Flexible(child: Text("Working Hours"))),
+                                DataColumn(
+                                  label: Text("Street"),
+                                ),
+                                DataColumn(
+                                  label: Text("Area"),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
-            ),
-          ],
+                      );
+                    }),
+              ),
+            ],
+          ),
         ));
   }
 
@@ -113,7 +113,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
     return [
       DataCell(Text(date.toString())),
-      DataCell(Text(difference.toString() + " minutes")),
+      DataCell(Text(difference.toString() + " mins")),
       DataCell(Text(s1 != null ? s1 : "not available")),
       DataCell(Text(a1 != null ? a1 : "not available")),
     ].toList();
