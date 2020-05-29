@@ -82,7 +82,7 @@ class UserProvider with ChangeNotifier {
           longitude: prodData['longitude'],
           phno: prodData['phone'],
           isAdmin: prodData['isAdmin'],
-          profilePicture: prodData['profile_photo']==null?null:prodData['profile_photo'],
+          profilePicture: prodData['profile_photo'],
         ));
       });
       _users = tempUserList;
