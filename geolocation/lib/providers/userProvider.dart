@@ -33,7 +33,7 @@ class User {
 class UserProvider with ChangeNotifier {
   List<User> _users = [];
   Future<void> additem(User newuser, userId) async {
-    var url = "https://geolocation-89f89.firebaseio.com/users/$userId.json";
+    var url = "https://geolocation-1b35f.firebaseio.com/users/$userId.json";
     // ?auth=$authToken
     try {
       final response = await http.put(url,
@@ -61,7 +61,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> fetchItem() async {
-    var url = "https://geolocation-89f89.firebaseio.com/users.json";
+    var url = "https://geolocation-1b35f.firebaseio.com/users.json";
     List<User> tempUserList = [];
     try {
       var response = await http.get(url);
@@ -82,7 +82,7 @@ class UserProvider with ChangeNotifier {
           longitude: prodData['longitude'],
           phno: prodData['phone'],
           isAdmin: prodData['isAdmin'],
-          profilePicture: prodData['profile_photo'],
+          profilePicture: prodData['profile_photo']==null?null:prodData['profile_photo'],
         ));
       });
       _users = tempUserList;

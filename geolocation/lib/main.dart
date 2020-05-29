@@ -9,7 +9,6 @@ import 'package:geolocation/screens/usereditscreen.dart';
 import 'package:provider/provider.dart';
 import 'screens/admin_screen.dart';
 import './providers/userProvider.dart';
-import './widgets/map.dart';
 import './screens/userDetailsScreen.dart';
 import './screens/AuthScreen.dart';
 import './providers/image_provider.dart';
