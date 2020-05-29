@@ -3,7 +3,6 @@ import 'package:geolocation/widgets/appbarmenu.dart';
 import 'package:provider/provider.dart';
 import '../providers/userProvider.dart';
 import '../widgets/admin_listTileItem.dart';
-import '../providers/auth.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
