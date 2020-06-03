@@ -4,7 +4,7 @@ import 'dart:convert';
 class FirebaseData {
   static String userName;
   static Future<void> updateLatLng(uid, latitude, longitude) async {
-    var url = "https://geolocation-89f89.firebaseio.com/users/${uid}.json";
+    var url = "https://geolocation-1b35f.firebaseio.com/users/${uid}.json";
     await http.patch(url,
         body: json.encode({
           'latitude': latitude,
@@ -15,7 +15,7 @@ class FirebaseData {
   }
 
   static Future<void> uploadImage(imageUrl, capturedDate, userId) async {
-    var url = "https://geolocation-89f89.firebaseio.com/captured_images.json";
+    var url = "https://geolocation-1b35f.firebaseio.com/captured_images.json";
     await http.post(url,
         body: json.encode({
           'imageUrl': imageUrl,
@@ -25,13 +25,13 @@ class FirebaseData {
   }
 
   static Future<void> getUserName(uid) async {
-    var url = "https://geolocation-89f89.firebaseio.com/users/${uid}/name.json";
+    var url = "https://geolocation-1b35f.firebaseio.com/users/${uid}/name.json";
     var response = await http.get(url);
     userName = json.decode(response.body);
   }
 
   static Future<void> uploadProfilePic(uid, imgUrl) async {
-    var url = "https://geolocation-89f89.firebaseio.com/users/$uid.json";
+    var url = "https://geolocation-1b35f.firebaseio.com/users/$uid.json";
     await http.patch(url,
         body: jsonEncode({
           'profile_photo': imgUrl,

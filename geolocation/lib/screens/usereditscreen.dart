@@ -219,6 +219,7 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
                           decoration:
                               InputDecoration(labelText: 'Confirm Password'),
                           textInputAction: TextInputAction.done,
+                          obscureText: true,
                           onSaved: (value) {
                             newPasswords = ChangePassword(
                               newPassword: newPasswords.newPassword,

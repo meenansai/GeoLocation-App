@@ -31,9 +31,14 @@ class _AdminScreenState extends State<AdminScreen> {
 
   Widget build(BuildContext context) {
     var usersList = Provider.of<UserProvider>(context, listen: false);
-
-    return Scaffold(
-      drawer: AppBarMenu(),
+    return _isLoading
+          ? Scaffold(
+            appBar: AppBar(title: Text('Welcome'),),
+            body: Center(child: CircularProgressIndicator()) ,
+          )
+         
+          : Scaffold(
+      drawer:AppBarMenu(),
       appBar: AppBar(
         title: Text('Users'),
         actions: [
@@ -57,9 +62,7 @@ class _AdminScreenState extends State<AdminScreen> {
           ),
         ],
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Container(
+      body: Container(
               padding: EdgeInsets.all(10),
               child: ListView.builder(
                 itemBuilder: (ctx, index) {

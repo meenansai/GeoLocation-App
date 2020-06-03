@@ -52,7 +52,7 @@ class Auth with ChangeNotifier {
   }
 
   // static Future<bool> isAdmin() async{
-  //   var urls="https://geolocation-89f89.firebaseio.com/users/$_userId/isAdmin.json";
+  //   var urls="https://geolocation-1b35f.firebaseio.com/users/$_userId/isAdmin.json";
   //   final response=await http.get(urls);
   //   var isAdminVal=json.decode(response.body);
   //   print(isAdminVal);
@@ -60,7 +60,7 @@ class Auth with ChangeNotifier {
   // }
   Future<void> fetchUser() async {
     var url =
-        "https://geolocation-89f89.firebaseio.com/users/$userid.json?auth=$_token";
+        "https://geolocation-1b35f.firebaseio.com/users/$userid.json?auth=$_token";
     try {
       print("before http call");
       final response = await http.get(url);
@@ -90,7 +90,7 @@ class Auth with ChangeNotifier {
 
   Future<void> signup(String email, String password) async {
     final url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyC52wCS2ORAXuqU4g4mxqfmG22XGKWB0IQ';
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB0rtz2Q8ejgA63Yv0McdkDZWZ-_xyI8xs';
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -119,7 +119,7 @@ class Auth with ChangeNotifier {
 
   Future<void> login(email, password) async {
     final url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC52wCS2ORAXuqU4g4mxqfmG22XGKWB0IQ';
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB0rtz2Q8ejgA63Yv0McdkDZWZ-_xyI8xs';
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -128,15 +128,17 @@ class Auth with ChangeNotifier {
             'returnSecureToken': true,
           }));
       final respData = json.decode(response.body);
+      print(respData);
       if (respData['error'] != null) {
         throw HttpException(respData['error']['message']);
       }
       _token = respData['idToken'];
       _userId = respData['localId'];
       var urls =
-          "https://geolocation-89f89.firebaseio.com/users/$_userId/isAdmin.json";
+          "https://geolocation-1b35f.firebaseio.com/users/$_userId/isAdmin.json";
       final resp = await http.get(urls);
       isadminCheck = json.decode(resp.body);
+      print("isAdmin check:"+isadminCheck.toString());
       _expirydate = DateTime.now().add(Duration(
         seconds: int.parse(respData['expiresIn']),
       ));
@@ -173,7 +175,7 @@ class Auth with ChangeNotifier {
     _userId = extractedData['userId'];
     _expirydate = expiryDate;
     var urls =
-        "https://geolocation-89f89.firebaseio.com/users/$_userId/isAdmin.json";
+        "https://geolocation-1b35f.firebaseio.com/users/$_userId/isAdmin.json";
     final resp = await http.get(urls);
     isadminCheck = json.decode(resp.body);
     notifyListeners();
@@ -197,7 +199,7 @@ class Auth with ChangeNotifier {
 
   Future<Null> changePassword(String newPassword) async {
     final String changePasswordUrl =
-        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyC52wCS2ORAXuqU4g4mxqfmG22XGKWB0IQ';
+        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyB0rtz2Q8ejgA63Yv0McdkDZWZ-_xyI8xs';
     print("ChangePassword:Password: " + newPassword);
     try {
       var resp = await http.post(changePasswordUrl,
