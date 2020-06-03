@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocation/screens/adminmapscreen.dart';
 import 'package:geolocation/widgets/appbarmenu.dart';
 import 'package:provider/provider.dart';
 import '../providers/userProvider.dart';
@@ -62,21 +63,45 @@ class _AdminScreenState extends State<AdminScreen> {
           ),
         ],
       ),
-      body: Container(
-              padding: EdgeInsets.all(10),
-              child: ListView.builder(
-                itemBuilder: (ctx, index) {
-                  return UserListItem(
-                    userId: usersList.users[index].id,
-                    userName: usersList.users[index].name,
-                    latitude: usersList.users[index].latitude,
-                    longitude: usersList.users[index].longitude,
-                    designation: usersList.users[index].designation,
-                  );
-                },
-                itemCount: usersList.users.length,
-              ),
-            ),
+      body: 
+          Column(
+                      children:[ 
+                        Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: RaisedButton(
+                          textColor: Colors.white,
+                          color: Colors.blueGrey,
+                        child: Text(" View users on map",style: TextStyle(fontSize: 16),),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(
+                            AdminMapScreen.routeName,
+                           ); },
+                           shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                          ),
+                      ),
+                        Flexible( flex: 1,
+                                              child: Container(
+                         
+                    padding: EdgeInsets.all(10),
+                    child: ListView.builder(
+                        itemBuilder: (ctx, index) {
+                          return UserListItem(
+                            userId: usersList.users[index].id,
+                            userName: usersList.users[index].name,
+                            latitude: usersList.users[index].latitude,
+                            longitude: usersList.users[index].longitude,
+                            designation: usersList.users[index].designation,
+                          );
+                        },
+                        itemCount: usersList.users.length,
+                    ),
+                  ),
+                      ),
+                      
+                      ],),
+       
 
       // floatingActionButton:
       //     FloatingActionButton.extended(
