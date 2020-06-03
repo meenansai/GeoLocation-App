@@ -101,7 +101,6 @@ class _ReportScreenState extends State<ReportScreen> {
     final date = DateFormat("dd-MMM-yyyy").format(start);
     final difference = stop.difference(start).inMinutes;
     var s1, a1;
-
     if (documentsnapshot["currentLat"] != null &&
         documentsnapshot["currentLong"] != null) {
       final coordinates = new Coordinates(
