@@ -1,7 +1,10 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:geolocation/providers/auth.dart';
 import 'package:geolocation/screens/report_map_screen.dart';
 import 'package:geolocation/widgets/map.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/userProvider.dart';
@@ -17,6 +20,7 @@ class UserDetailsAdmin extends StatefulWidget {
 
 class _UserDetailsAdminState extends State<UserDetailsAdmin> {
   DateTime _dateTime;
+  static var dateFormat = new DateFormat('dd-MM-yyyy');
   Widget buildTile(Icon icon, String title, String value) {
     return Card(
       elevation: 3,
@@ -38,7 +42,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
     print(id);
     final user = Provider.of<UserProvider>(context, listen: false);
     var isAdmin = Provider.of<Auth>(context, listen: false).isAdminCh;
-    final User userSelected =user.getUser(id);
+    final User userSelected = user.getUser(id);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -81,10 +85,11 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100)),
                             child: ClipOval(
-                              child:userSelected.profilePicture==null? Image.network(
-                                  'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg')
-                                  :Image.network(userSelected.profilePicture)
-                            )),
+                                child: userSelected.profilePicture == null
+                                    ? Image.network(
+                                        'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg')
+                                    : Image.network(
+                                        userSelected.profilePicture))),
                       ),
                     ),
                   ),
@@ -108,34 +113,79 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                   ),
                   Column(
                     children: <Widget>[
-                       Text(_dateTime == null ? 'Nothing has been picked yet' : _dateTime.toString()),
-            RaisedButton(
-              child: Text('Pick a date'),
-              onPressed: () {
-                showDatePicker(
-                  context: context,
-                  initialDate: _dateTime == null ? DateTime.now() : _dateTime,
-                  firstDate: DateTime(2001),
-                  lastDate: DateTime(2021)
-                ).then((date) {
-                  setState(() {
-                    _dateTime = date;
-                  });
-                });
-              },
-            ),
-
-                      RaisedButton(
-                          child: Text(" get report"),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
-                              ReportMapScreen.routeName,
-                              arguments: {
-                                'id':id,
-                                'date':_dateTime
-                              },
-                            );
-                          }),
+                      Text(
+                        _dateTime == null
+                            ? 'Choose Date'
+                            : _dateTime.toString(),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          fontFamily: 'RobotoCondensed',
+                        ),
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: RaisedButton(
+                                child: Text('Pick a date'),
+                                textColor: Colors.black,
+                                color: Colors.amber,
+                                shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(30.0),
+                                ),
+                                onPressed: () {
+                                  showDatePicker(
+                                          context: context,
+                                          initialDate: _dateTime == null
+                                              ? DateTime.now()
+                                              : _dateTime,
+                                          firstDate: DateTime(2001),
+                                          lastDate: DateTime(2021))
+                                      .then((date) {
+                                    setState(() {
+                                      // _dateTime =dateFormat.format(date);
+                                      _dateTime = date;
+                                    });
+                                  });
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: RaisedButton(
+                                  child: Text(" Get Report"),
+                                  textColor: Colors.black,
+                                  color: Colors.amber,
+                                  shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0),
+                                  ),
+                                  onPressed: () {
+                                    if (_dateTime != null) {
+                                      Navigator.of(context).pushNamed(
+                                        ReportMapScreen.routeName,
+                                        arguments: {
+                                          'id': id,
+                                          'date': _dateTime
+                                        },
+                                      );
+                                    } else {
+                                      print("Get Report: date: " +
+                                          _dateTime.toString());
+                                      // Scaffold.of(context)
+                                      //     .showSnackBar(SnackBar(
+                                      //   content: Text(
+                                      //       'Select the date to Continue.'),
+                                      //   duration: Duration(seconds: 1),
+                                      // ));
+                                    }
+                                  }),
+                            ),
+                          ])
                     ],
                   ),
                   SizedBox(
