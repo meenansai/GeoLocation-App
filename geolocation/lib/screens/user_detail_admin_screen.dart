@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocation/providers/auth.dart';
+import 'package:geolocation/screens/report_map_screen.dart';
 import 'package:geolocation/widgets/map.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,7 @@ class UserDetailsAdmin extends StatefulWidget {
 }
 
 class _UserDetailsAdminState extends State<UserDetailsAdmin> {
+  DateTime _dateTime;
   Widget buildTile(Icon icon, String title, String value) {
     return Card(
       elevation: 3,
@@ -104,14 +106,38 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                   SizedBox(
                     height: 12,
                   ),
-                  RaisedButton(
-                      child: Text(" get report"),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(
-                          ReportScreen.routeName,
-                          arguments: id,
-                        );
-                      }),
+                  Column(
+                    children: <Widget>[
+                       Text(_dateTime == null ? 'Nothing has been picked yet' : _dateTime.toString()),
+            RaisedButton(
+              child: Text('Pick a date'),
+              onPressed: () {
+                showDatePicker(
+                  context: context,
+                  initialDate: _dateTime == null ? DateTime.now() : _dateTime,
+                  firstDate: DateTime(2001),
+                  lastDate: DateTime(2021)
+                ).then((date) {
+                  setState(() {
+                    _dateTime = date;
+                  });
+                });
+              },
+            ),
+
+                      RaisedButton(
+                          child: Text(" get report"),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                              ReportMapScreen.routeName,
+                              arguments: {
+                                'id':id,
+                                'date':_dateTime
+                              },
+                            );
+                          }),
+                    ],
+                  ),
                   SizedBox(
                     height: 20,
                   ),

@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:geolocation/providers/auth.dart';
+import 'package:geolocation/providers/latlong.dart';
 import 'package:geolocation/screens/change_password_screen.dart';
 import 'package:geolocation/screens/home_screen.dart';
 import 'package:geolocation/screens/images_screen.dart';
@@ -13,6 +14,7 @@ import './screens/userDetailsScreen.dart';
 import './screens/AuthScreen.dart';
 import './providers/image_provider.dart';
 import 'screens/report_screen.dart';
+import './screens/report_map_screen.dart';
 void main() => runApp(
       MyApp(),
     );
@@ -31,6 +33,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (ctx) => ImageProviders(),
+          ),
+          ChangeNotifierProvider(
+            create: (ctx) => LatLongProvider(),
           ),
         ],
         child: Consumer<Auth>(
@@ -72,6 +77,7 @@ class MyApp extends StatelessWidget {
                 UserProdEditScreen.routeName: (ctx) => UserProdEditScreen(),
                 ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
                 ReportScreen.routeName: (ctx) => ReportScreen(),
+                ReportMapScreen.routeName:(ctx)=>ReportMapScreen()
               }),
         ));
   }
