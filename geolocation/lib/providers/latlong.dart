@@ -42,6 +42,28 @@ class LatLongProvider extends ChangeNotifier{
 //   }
   List<LatLng> latlong=[];
 
+  Future<void> addReport(userId, latitude, longitude) async {
+    var formatter = new DateFormat('dd-MM-yyyy');
+    var now=DateTime.now();
+  String formatted = formatter.format(now);
+    var url = "https://geolocation-1b35f.firebaseio.com/latlong/$userId/$formatted.json";
+    // ?auth=$authToken
+    var time=DateFormat('H:m:s').format(now);
+    try {
+      final response = await http.post(url,
+          body: json.encode({
+            'latitude':latitude,
+            'longitude':longitude,
+            'time':time
+          }));
+      print("add report "+response.toString());
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
+
   Future<void> fetchReports(uid,now) async {
     // var now = new DateTime.now();
   var formatter = new DateFormat('dd-MM-yyyy');

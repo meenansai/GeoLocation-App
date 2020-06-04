@@ -37,4 +37,7 @@ class FirebaseData {
           'profile_photo': imgUrl,
         }));
   }
+
+  
+
 }
