@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:geolocation/providers/auth.dart';
+import 'package:geolocation/screens/adminmapscreen.dart';
 import 'package:geolocation/screens/change_password_screen.dart';
 import 'package:geolocation/screens/home_screen.dart';
 import 'package:geolocation/screens/images_screen.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
                 UserProdEditScreen.routeName: (ctx) => UserProdEditScreen(),
                 ChangePasswordScreen.routeName: (ctx) => ChangePasswordScreen(),
                 ReportScreen.routeName: (ctx) => ReportScreen(),
+                AdminMapScreen.routeName: (ctx) =>AdminMapScreen()
               }),
         ));
   }
