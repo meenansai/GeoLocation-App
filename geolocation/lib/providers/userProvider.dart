@@ -69,6 +69,7 @@ class UserProvider with ChangeNotifier {
       if (retData == null) {
         return;
       }
+      print("fetched users "+ retData.toString());
       retData.forEach((prodId, prodData) {
         tempUserList.add(User(
           id: prodId,
@@ -92,6 +93,17 @@ class UserProvider with ChangeNotifier {
 
   List<User> get users {
     return [..._users];
+  }
+
+  List<User> getUsers(){
+    List<User> allusers=_users;
+    List<User> temp;
+    for(int i=0;i<allusers.length;i++){
+      if(allusers[i].isAdmin){
+        temp.add(allusers[i]);
+      }
+    }
+    return temp;
   }
 
   User getUser(id) {

@@ -20,7 +20,8 @@ class UserDetailsAdmin extends StatefulWidget {
 
 class _UserDetailsAdminState extends State<UserDetailsAdmin> {
   DateTime _dateTime;
-  static var dateFormat = new DateFormat('dd-MM-yyyy');
+  DateFormat dateFormat = new DateFormat('dd-MM-yyyy');
+  
   Widget buildTile(Icon icon, String title, String value) {
     return Card(
       elevation: 3,
@@ -143,12 +144,11 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                                           initialDate: _dateTime == null
                                               ? DateTime.now()
                                               : _dateTime,
-                                          firstDate: DateTime(2001),
-                                          lastDate: DateTime(2021))
+                                          firstDate: DateTime.now().subtract(Duration(days: 31)),
+                                          lastDate: DateTime.now())
                                       .then((date) {
-                                    setState(() {
-                                      // _dateTime =dateFormat.format(date);
-                                      _dateTime = date;
+                                    setState(() {  
+                                      _dateTime =date;
                                     });
                                   });
                                 },

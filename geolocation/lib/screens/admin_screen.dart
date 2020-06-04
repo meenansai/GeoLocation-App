@@ -31,12 +31,9 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Widget build(BuildContext context) {
-    var usersList = Provider.of<UserProvider>(context, listen: false);
+    var usersList = Provider.of<UserProvider>(context,listen: false).users;
     return _isLoading
         ? Scaffold(
-            appBar: AppBar(
-              title: Text('Welcome'),
-            ),
             body: Center(child: CircularProgressIndicator()),
           )
         : Scaffold(
@@ -46,7 +43,13 @@ class _AdminScreenState extends State<AdminScreen> {
               actions: [
                 FlatButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/');
+                      Navigator.pushReplacementNamed(context, '/'); 
+                      
+                      // setState(() {
+                      //     Provider.of<UserProvider>(context, listen: false).fetchItem();
+                      // });
+                  
+                     
                     },
                     child: Row(
                       children: [
@@ -75,15 +78,18 @@ class _AdminScreenState extends State<AdminScreen> {
                     padding: EdgeInsets.all(10),
                     child: ListView.builder(
                       itemBuilder: (ctx, index) {
-                        return UserListItem(
-                          userId: usersList.users[index].id,
-                          userName: usersList.users[index].name,
-                          latitude: usersList.users[index].latitude,
-                          longitude: usersList.users[index].longitude,
-                          designation: usersList.users[index].designation,
+                        // print(usersList[index].isAdmin);
+                        if(true){
+                          return UserListItem(
+                          userId: usersList[index].id,
+                          userName: usersList[index].name,
+                          latitude: usersList[index].latitude,
+                          longitude: usersList[index].longitude,
+                          designation: usersList[index].designation,
                         );
+                        }
                       },
-                      itemCount: usersList.users.length,
+                      itemCount: usersList.length,
                     ),
                   ),
                 ),

@@ -213,9 +213,6 @@ class _HomeScreenState extends State<HomeScreen> {
     var uid = Provider.of<Auth>(context, listen: false).userid;
     return _isLoading
         ? Scaffold(
-            appBar: AppBar(
-              title: Text('Welcome'),
-            ),
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -316,6 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           listen: false)
                                       .addReport(uid, currentLocation.latitude,
                                           currentLocation.longitude);
+                                      
                                 },
                               ),
                             ],

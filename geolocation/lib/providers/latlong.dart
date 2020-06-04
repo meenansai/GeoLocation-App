@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:geolocation/models/http_exception.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -43,20 +44,25 @@ class LatLongProvider extends ChangeNotifier{
   List<LatLng> latlong=[];
 
   Future<void> addReport(userId, latitude, longitude) async {
-    var formatter = new DateFormat('dd-MM-yyyy');
+    var formatterDate = new DateFormat('dd-MM-yyyy');
     var now=DateTime.now();
-    String formatted = formatter.format(now);
-    var url = "https://geolocation-1b35f.firebaseio.com/latlong/$userId/$formatted.json";
+    var formatterTime= new DateFormat('H:m:s');
+    String formattedDate = formatterDate.format(now);
+    String formattedTime = formatterTime.format(now);
+    String currentDateTime=formattedDate+formattedTime;
+    print(currentDateTime);
+    var url = "https://geolocation-1b35f.firebaseio.com/latlong/$userId/$formattedDate/$currentDateTime.json";
     // ?auth=$authToken
     var time=DateFormat('H:m:s').format(now);
     try {
-      final response = await http.post(url,
+      final response = await http.put(url,
           body: json.encode({
             'latitude':latitude,
             'longitude':longitude,
             'time':time
           }));
-      print("add report "+response.toString());
+        var respdata=json.decode(response.body);
+      print("add report "+respdata.toString());
       notifyListeners();
     } catch (error) {
       print(error);
@@ -76,7 +82,7 @@ class LatLongProvider extends ChangeNotifier{
       var response = await http.get(url);
       var retData = json.decode(response.body) as Map<String, dynamic>;
       if (retData == null) {
-        return;
+        throw HttpException('No Data Found on this Date');
       }
       print("fetched data");
       print(retData);

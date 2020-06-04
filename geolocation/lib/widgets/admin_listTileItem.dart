@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../screens/user_detail_admin_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/userProvider.dart';
-class UserListItem extends StatelessWidget {
+import 'package:geocoder/geocoder.dart';
+class UserListItem extends StatefulWidget {
   final String userId;
   final String userName;
   final double latitude;
@@ -14,8 +15,50 @@ class UserListItem extends StatelessWidget {
       this.userName,
       this.latitude,
       this.longitude});
+
+  @override
+  _UserListItemState createState() => _UserListItemState();
+}
+
+class _UserListItemState extends State<UserListItem> {
+  List<Address> results = [];
+  var street;
+  var area;
+
+  addressFromCoordinates(latitude, longitude) {
+    final coordinates = new Coordinates(latitude, longitude);
+    findAdress(coordinates);
+    street = this.street;
+    area = this.area;
+  }
+
+  Future<void> findAdress(Coordinates coordinates) async {
+    try {
+      var results =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = results.first;
+      var street = first.featureName;
+      var area = first.subLocality;
+      this.setState(() {
+        this.results = results;
+        this.street = street;
+        this.area = area;
+      });
+      // print(area);
+    } catch (e) {
+      print("Error occured: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    addressFromCoordinates(widget.latitude, widget.longitude);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    
+    var isAdmin=Provider.of<UserProvider>(context,listen: false).isAdmin(widget.userId);
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -25,7 +68,7 @@ class UserListItem extends StatelessWidget {
         onTap: () {
           Navigator.of(context).pushNamed(
             UserDetailsAdmin.routeName,
-            arguments: userId,
+            arguments: widget.userId,
           );
         },
         borderRadius: BorderRadius.circular(10),
@@ -37,7 +80,7 @@ class UserListItem extends StatelessWidget {
               child: FittedBox(
                 child:
                     Text(
-                      userName.substring(0, 1).toUpperCase(),
+                      widget.userName.substring(0, 1).toUpperCase(),
                       style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
                     ),
               ),
@@ -45,14 +88,14 @@ class UserListItem extends StatelessWidget {
             title: Row(
               children: <Widget>[
                 Text(
-                  userName,
+                  widget.userName,
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 SizedBox(
                   width: 5,
                 ),
                 
-                Provider.of<UserProvider>(context,listen: false).isAdmin(userId)?
+                Provider.of<UserProvider>(context,listen: false).isAdmin(widget.userId)?
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 5,vertical: 3),
                     decoration: BoxDecoration(
@@ -73,18 +116,28 @@ class UserListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  designation,
+                  widget.designation,
                   style: TextStyle(
                     fontSize: 15,
                   ),
                 ),
+                // Row(
+                //   children: <Widget>[
+                //     Text(widget.latitude.toString()),
+                //     SizedBox(
+                //       width: 10,
+                //     ),
+                //     Text(widget.longitude.toString()),
+                //   ],
+                // ),
                 Row(
                   children: <Widget>[
-                    Text(latitude.toString()),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(longitude.toString()),
+                    Text(
+                        ((street!=null || area!=null)) ? street + ", "+ area : ""),
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
+                    // Text(widget.longitude.toString()),
                   ],
                 ),
               ],
