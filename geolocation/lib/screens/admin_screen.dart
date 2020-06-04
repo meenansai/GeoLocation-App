@@ -90,8 +90,8 @@ class _AdminScreenState extends State<AdminScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: RaisedButton(
-                    textColor: Colors.white,
-                    color: Colors.blueGrey,
+                    textColor: Colors.black,
+                    color: Colors.amber,
                     child: Text(
                       " View users on map",
                       style: TextStyle(fontSize: 16),

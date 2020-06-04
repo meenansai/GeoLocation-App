@@ -45,7 +45,7 @@ class LatLongProvider extends ChangeNotifier{
   Future<void> addReport(userId, latitude, longitude) async {
     var formatter = new DateFormat('dd-MM-yyyy');
     var now=DateTime.now();
-  String formatted = formatter.format(now);
+    String formatted = formatter.format(now);
     var url = "https://geolocation-1b35f.firebaseio.com/latlong/$userId/$formatted.json";
     // ?auth=$authToken
     var time=DateFormat('H:m:s').format(now);
