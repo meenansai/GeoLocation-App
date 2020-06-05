@@ -131,7 +131,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                       Text(
                         _dateTime == null
                             ? 'Choose Date'
-                            : DateFormat('dd-MM-yyyy').format(_dateTime).toString(),
+                            : DateFormat('dd-MM-yyyy').format(_dateTime),
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -163,6 +163,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                                           lastDate: DateTime.now())
                                       .then((date) {
                                     setState(() {
+                                      print(date);
                                       _dateTime = date;
                                     });
                                   });
@@ -181,6 +182,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                                   ),
                                   onPressed: () {
                                     if (_dateTime != null) {
+                                      print("date picked");
                                       Navigator.of(context).pushNamed(
                                         ReportMapScreen.routeName,
                                         arguments: {
@@ -188,9 +190,10 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                                           'date': _dateTime
                                         },
                                       );
-                                    } else {
-                                      print("Get Report: date: " +
-                                          DateFormat('dd-MM-yyyy').format(_dateTime).toString());
+                                    }
+                                    else{
+                                      // print("Get Report: date: " +
+                                      //     DateFormat('dd-MM-yyyy').format(_dateTime).toString());
                                       _showSnackBar();
                                     }
                                   }),
