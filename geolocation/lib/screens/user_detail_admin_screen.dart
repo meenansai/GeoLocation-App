@@ -131,7 +131,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                       Text(
                         _dateTime == null
                             ? 'Choose Date'
-                            : DateFormat('yyyy-MM-dd').format(_dateTime).toString(),
+                            : DateFormat('dd-MM-yyyy').format(_dateTime).toString(),
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -190,7 +190,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                                       );
                                     } else {
                                       print("Get Report: date: " +
-                                          DateFormat('yyyy-MM-dd').format(_dateTime).toString());
+                                          DateFormat('dd-MM-yyyy').format(_dateTime).toString());
                                       _showSnackBar();
                                     }
                                   }),
