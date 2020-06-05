@@ -21,13 +21,31 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     newPassword: '',
   );
   User user;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  _showSnackBar(String msg,bool status) {
+    final snackBar = new SnackBar(
+      content: Text(
+        msg,
+        textAlign: TextAlign.center,
+      ),
+      duration: new Duration(seconds: 1),
+      backgroundColor:status? Colors.green:Colors.red,
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
   void _saveForm(email) async {
     bool isValid = _form.currentState.validate();
     if (!isValid) {
       return;
     }
+    
     print('Form Valid');
     _form.currentState.save();
+    if(newPasswords.newPassword!=newPasswords.confirmPassword){
+          print("wrong");
+          _showSnackBar("Passwords didn't match, Recheck Passwords",false);
+          return;
+    }
     // setState(() {
     //   isLoading = true;
     // });
@@ -36,13 +54,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       setState(() {
         isLoading=true;
       });
-      await Provider.of<Auth>(context, listen: false).changePassword(newPasswords.confirmPassword);
-      setState(() {
+      if(newPasswords.newPassword==newPasswords.confirmPassword){
+         await Provider.of<Auth>(context, listen: false).changePassword(newPasswords.confirmPassword).then((value){
+        _showSnackBar("Password changed successfully",true);
+        
+      
+      });
+       setState(() {
         isLoading=false;
       });
-      // Scaffold.of(context).showSnackBar(SnackBar(content:Text("Changed Password",textAlign: TextAlign.center,)));
+    }
       
-      Navigator.of(context).pop();
+     
     } 
     catch (error) {
      showDialog(
@@ -81,6 +104,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         //       }),
         // ],
       ),
+       key: _scaffoldKey,
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(),
@@ -132,14 +156,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             if (value.isEmpty) {
                               return 'Please enter confirm password';
                             }
-                            if (newPasswords.newPassword !=
-                                newPasswords.confirmPassword) {
-                              //  setState(() {
-                              //  newPasswords.confirmPassword=null;
+                            // if (newPasswords.newPassword !=
+                            //     newPasswords.confirmPassword) {
+                            //   //  setState(() {
+                            //   //  newPasswords.confirmPassword=null;
 
-                              //  });
-                              return 'Passwords doesn\'t match';
-                            } else {
+                            //   //  });
+                            //   return 'Passwords doesn\'t match';
+                            // } 
+                            else {
                               return null;
                             }
                           },

@@ -58,12 +58,30 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
     super.dispose();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  
+  _showSnackBar(String msg,bool status) {
+    final snackBar = new SnackBar(
+      content: Text(
+        msg,
+        textAlign: TextAlign.center,
+      ),
+      duration: new Duration(seconds: 1),
+      backgroundColor:status?Colors.green: Colors.red,
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
   void _saveForm() async {
     bool isValid = _form.currentState.validate();
     if (!isValid) {
       return;
     }
     _form.currentState.save();
+    if(newPasswords.newPassword!=newPasswords.confirmPassword){
+          _showSnackBar("Passwords didn't match, Recheck Passwords",false);
+          return;
+    }
     setState(() {
       isLoading = true;
     });
@@ -82,8 +100,13 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
         // }
         var userId = Provider.of<Auth>(context, listen: false).extraUserId;
         newUser.isAdmin = _selectedRole == "Admin";
+        if(newPasswords.newPassword==newPasswords.confirmPassword){
         await Provider.of<UserProvider>(context, listen: false)
-            .additem(newUser, userId);
+            .additem(newUser, userId).then((value){
+               _showSnackBar("User added successfully",true);
+            });
+        }
+
       } catch (error) {
         await showDialog<Null>(
             context: context,
@@ -122,6 +145,7 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
               }),
         ],
       ),
+      key: _scaffoldKey,
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(),
@@ -218,7 +242,7 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
                           initialValue: '',
                           decoration:
                               InputDecoration(labelText: 'Confirm Password'),
-                          textInputAction: TextInputAction.done,
+                          textInputAction: TextInputAction.next,
                           obscureText: true,
                           onSaved: (value) {
                             newPasswords = ChangePassword(
@@ -230,10 +254,11 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
                             if (value.isEmpty) {
                               return 'Please enter confirm password';
                             }
-                            if (newPasswords.newPassword !=
-                                newPasswords.confirmPassword) {
-                              return 'Passwords doesn\'t match';
-                            } else {
+                            // if (newPasswords.newPassword !=
+                            //     newPasswords.confirmPassword) {
+                            //   return 'Passwords doesn\'t match';
+                            // } 
+                            else {
                               return null;
                             }
                           },
@@ -243,6 +268,7 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
                         initialValue: '',
                         decoration: InputDecoration(labelText: 'Designation'),
                         keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
                         focusNode: _designationfocusnode,
                         onFieldSubmitted: (_) {
                           FocusScope.of(context)
@@ -269,6 +295,7 @@ class _UserProdEditScreenState extends State<UserProdEditScreen> {
                         initialValue: '',
                         decoration: InputDecoration(labelText: 'Phone Number'),
                         keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.done,
                         focusNode: _phonenumberfocusnode,
                         onSaved: (value) {
                           newUser = User(

@@ -19,7 +19,7 @@ class UserDetailsAdmin extends StatefulWidget {
 }
 
 class _UserDetailsAdminState extends State<UserDetailsAdmin> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  
   DateTime _dateTime;
   DateFormat dateFormat = new DateFormat('dd-MM-yyyy');
 
@@ -36,7 +36,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
       ),
     );
   }
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   _showSnackBar() {
     final snackBar = new SnackBar(
       content: Text(
