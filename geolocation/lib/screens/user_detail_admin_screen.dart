@@ -20,9 +20,7 @@ class UserDetailsAdmin extends StatefulWidget {
 
 class _UserDetailsAdminState extends State<UserDetailsAdmin> {
   
-  DateTime _dateTime;
-  DateFormat dateFormat = new DateFormat('dd-MM-yyyy');
-
+ 
   Widget buildTile(Icon icon, String title, String value) {
     return Card(
       elevation: 3,
@@ -36,18 +34,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
       ),
     );
   }
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  _showSnackBar() {
-    final snackBar = new SnackBar(
-      content: Text(
-        "select date to continue.",
-        textAlign: TextAlign.center,
-      ),
-      duration: new Duration(seconds: 1),
-      backgroundColor: Colors.red,
-    );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +54,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
         appBar: AppBar(
           title: Text('Details'),
         ),
-        key: _scaffoldKey,
+       
         body: SingleChildScrollView(
           child: Stack(
             children: <Widget>[
@@ -101,9 +88,8 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                                 borderRadius: BorderRadius.circular(100)),
                             child: ClipOval(
                                 child: userSelected.profilePicture == null
-                                    ? Image.network(
-                                        'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg')
-                                    : Image.network(
+                                    ? Image.asset("assets/images/person.jpg"):
+                                     Image.network(
                                         userSelected.profilePicture))),
                       ),
                     ),
@@ -126,81 +112,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                   SizedBox(
                     height: 12,
                   ),
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        _dateTime == null
-                            ? 'Choose Date'
-                            : DateFormat('dd-MM-yyyy').format(_dateTime),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          fontFamily: 'RobotoCondensed',
-                        ),
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: RaisedButton(
-                                child: Text('Pick a date'),
-                                textColor: Colors.black,
-                                color: Colors.amber,
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
-                                ),
-                                onPressed: () {
-                                  showDatePicker(
-                                          context: context,
-                                          initialDate: _dateTime == null
-                                              ? DateTime.now()
-                                              : _dateTime,
-                                          firstDate: DateTime.now()
-                                              .subtract(Duration(days: 31)),
-                                          lastDate: DateTime.now())
-                                      .then((date) {
-                                    setState(() {
-                                      print(date);
-                                      _dateTime = date;
-                                    });
-                                  });
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: RaisedButton(
-                                  child: Text(" Get Report"),
-                                  textColor: Colors.black,
-                                  color: Colors.amber,
-                                  shape: new RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0),
-                                  ),
-                                  onPressed: () {
-                                    if (_dateTime != null) {
-                                      print("date picked");
-                                      Navigator.of(context).pushNamed(
-                                        ReportMapScreen.routeName,
-                                        arguments: {
-                                          'id': id,
-                                          'date': _dateTime
-                                        },
-                                      );
-                                    }
-                                    else{
-                                      // print("Get Report: date: " +
-                                      //     DateFormat('dd-MM-yyyy').format(_dateTime).toString());
-                                      _showSnackBar();
-                                    }
-                                  }),
-                            ),
-                          ])
-                    ],
-                  ),
+                  
                   SizedBox(
                     height: 20,
                   ),

@@ -154,8 +154,9 @@ class _UserDetailsState extends State<UserDetails> {
                                             fit: BoxFit.fill,
                                           )
                                         : DecorationImage(
-                                            image: NetworkImage(
-                                                'https://image.freepik.com/free-vector/profile-icon-male-avatar-hipster-man-wear-headphones_48369-8728.jpg'),
+                                            image: AssetImage(
+                                              "assets/images/person.jpg"
+                                            ),
                                             fit: BoxFit.fill,
                                           ),
                                   )),

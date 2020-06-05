@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocation/screens/adminmapscreen.dart';
+
 import 'package:geolocation/widgets/appbarmenu.dart';
 import 'package:provider/provider.dart';
 import '../providers/userProvider.dart';
-import '../widgets/admin_listTileItem.dart';
+import '../widgets/profile.dart';
+import '../widgets/report.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class _AdminScreenState extends State<AdminScreen> {
   var _isinit = true;
   var _isLoading = false;
   var userName;
+
   void didChangeDependencies() {
     if (_isinit) {
       setState(() {
@@ -30,8 +33,20 @@ class _AdminScreenState extends State<AdminScreen> {
     super.didChangeDependencies();
   }
 
+  int _currentIndex = 0;
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   Widget build(BuildContext context) {
-    var usersList = Provider.of<UserProvider>(context,listen: false).users;
+    var usersList = Provider.of<UserProvider>(context, listen: false).users;
+
+    final List<Widget> _children = [
+      Report(usersList),
+      Profile(usersList: usersList),
+    ];
     return _isLoading
         ? Scaffold(
             body: Center(child: CircularProgressIndicator()),
@@ -39,17 +54,11 @@ class _AdminScreenState extends State<AdminScreen> {
         : Scaffold(
             drawer: AppBarMenu(),
             appBar: AppBar(
-              title: Text('Users'),
+              title: _currentIndex == 0 ? Text('Report') : Text('Users'),
               actions: [
                 FlatButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/'); 
-                      
-                      // setState(() {
-                      //     Provider.of<UserProvider>(context, listen: false).fetchItem();
-                      // });
-                  
-                     
+                      Navigator.pushReplacementNamed(context, '/');
                     },
                     child: Row(
                       children: [
@@ -70,59 +79,23 @@ class _AdminScreenState extends State<AdminScreen> {
                     ),
               ],
             ),
-            body: Column(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: ListView.builder(
-                      itemBuilder: (ctx, index) {
-                        // print(usersList[index].isAdmin);
-                        if(true){
-                          return UserListItem(
-                          userId: usersList[index].id,
-                          userName: usersList[index].name,
-                          latitude: usersList[index].latitude,
-                          longitude: usersList[index].longitude,
-                          designation: usersList[index].designation,
-                        );
-                        }
-                      },
-                      itemCount: usersList.length,
-                    ),
-                  ),
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.shifting,
+              selectedItemColor: Colors.indigo,
+              unselectedItemColor: Colors.blueGrey,
+              onTap: onTabTapped, // new
+              currentIndex: _currentIndex, // new
+              items: [
+                BottomNavigationBarItem(
+                  icon: new Icon(Icons.library_books),
+                  title: new Text('Report'),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
-                    textColor: Colors.black,
-                    color: Colors.amber,
-                    child: Text(
-                      " View users on map",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        AdminMapScreen.routeName,
-                      );
-                    },
-                    shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0),
-                    ),
-                  ),
-                ),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person), title: Text('Profile'))
               ],
             ),
-
-            // floatingActionButton:
-            //     FloatingActionButton.extended(
-            //       onPressed: () {},
-            //       icon: Icon(Icons.person_pin_circle,color: Colors.white,),
-            //       label: Text('Locate'),
-            //     ),
-
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            body: _children[_currentIndex],
+            
           );
   }
 }
