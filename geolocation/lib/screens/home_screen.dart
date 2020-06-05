@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocation/providers/latlong.dart';
 import 'package:geolocation/screens/sharing_drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -22,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Location location = new Location();
   Map<String, double> currentLocation;
   // var latitude;
@@ -38,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   StreamSubscription _locationSubscription;
   Location _locationTracker = Location();
+  Location _cLocation = Location();
   Marker marker;
   Circle circle;
   GoogleMapController _controller;
@@ -137,7 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
         if (_isSharing) {
           FirebaseData.updateLatLng(
               uid, newLocalData.latitude, newLocalData.longitude);
-              Provider.of<Auth>(context,listen: false).updateFetchedUser( newLocalData.latitude, newLocalData.longitude);
+          Provider.of<Auth>(context, listen: false)
+              .updateFetchedUser(newLocalData.latitude, newLocalData.longitude);
         }
         if (_controller != null) {
           _controller.animateCamera(CameraUpdate.newCameraPosition(
@@ -189,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 event.snapshot.totalByteCount.toDouble());
         if (percentage == 100.0) {
           pr.hide();
+          _showSnackBar("Photo Uploaded Successfully");
         }
         print("THe percentage " + percentage.toString());
       });
@@ -204,96 +209,137 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  //Display SnackBar
+  _showSnackBar(String message) {
+    final snackBar = new SnackBar(
+      content: Text(
+        message,
+        textAlign: TextAlign.center,
+      ),
+      duration: new Duration(seconds: 1),
+      backgroundColor: Colors.green,
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context);
     var uid = Provider.of<Auth>(context, listen: false).userid;
-    return _isLoading?
-    Scaffold(
-      appBar: AppBar(title: Text('Welcome'),),
-      body: Center(
-        child: CircularProgressIndicator(),),
-    )
-    
-    : Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      drawer: _isEnable
-          ? UserDrawer(uid)
-          : SharingDrawer(),
-      body: _initPosition == null
-          ? Center(child: CircularProgressIndicator())
-          : Stack(
-              children: <Widget>[
-                GoogleMap(
-                  // mapType: MapType.normal,
-                  initialCameraPosition: initialLocation,
-                  markers: Set.of((marker != null)
-                      ? [marker]
-                      : [
-                          Marker(
-                            markerId: MarkerId("rakesh"),
-                            position: _initPosition,
-                          )
-                        ]),
-                  // circles: Set.of((circle != null) ? [circle] : []),
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller = controller;
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  // padding: EdgeInsets.only(bottom: 5, left: 4),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        _isEnable
-                            ? FloatingActionButton(
-                                heroTag: "btn1",
-                                // label: Text("Share"),
+    return _isLoading
+        ? Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('Home'),
+            ),
+            key: _scaffoldKey,
+            drawer: _isEnable ? UserDrawer(uid) : SharingDrawer(),
+            body: _initPosition == null
+                ? Center(child: CircularProgressIndicator())
+                : Stack(
+                    children: <Widget>[
+                      GoogleMap(
+                        // mapType: MapType.normal,
+                        initialCameraPosition: initialLocation,
+                        markers: Set.of((marker != null)
+                            ? [marker]
+                            : [
+                                Marker(
+                                  markerId: MarkerId("rakesh"),
+                                  position: _initPosition,
+                                )
+                              ]),
+                        // circles: Set.of((circle != null) ? [circle] : []),
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller = controller;
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(25.0),
+                        // padding: EdgeInsets.only(bottom: 5, left: 4),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              _isEnable
+                                  ? FloatingActionButton(
+                                      heroTag: "btn1",
+                                      // label: Text("Share"),
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.padded,
+                                      backgroundColor:
+                                          Theme.of(context).accentColor,
+                                      child: const Icon(Icons.screen_share,
+                                          size: 36.0),
+                                      onPressed: () {
+                                        _isEnable = false;
+                                        getCurrentLocation(uid);
+                                        _isSharing = true;
+                                      },
+                                    )
+                                  : FloatingActionButton(
+                                      heroTag: "btn2",
+                                      //label: Text("Stop"),
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.padded,
+                                      backgroundColor: Colors.red,
+                                      child: const Icon(Icons.stop_screen_share,
+                                          size: 36.0),
+                                      onPressed: () async {
+                                        await Provider.of<Auth>(context,
+                                                listen: false)
+                                            .fetchUser();
+                                        _isEnable = true;
+                                        _isSharing = false;
+                                      },
+                                    ),
+                              SizedBox(height: 16.0),
+                              FloatingActionButton(
+                                heroTag: "btn3",
+                                //label: Text("Capture"),
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.padded,
                                 backgroundColor: Theme.of(context).accentColor,
-                                child:
-                                    const Icon(Icons.screen_share, size: 36.0),
-                                onPressed: () {
-                                  _isEnable = false;
-                                  getCurrentLocation(uid);
-                                  _isSharing = true;
-                                },
-                              )
-                            : FloatingActionButton(
-                                heroTag: "btn2",
-                                //label: Text("Stop"),
+                                child: const Icon(Icons.camera, size: 36.0),
+                                onPressed: () => _takePicture(uid),
+                              ),
+                              SizedBox(height: 16.0),
+                              FloatingActionButton(
+                                heroTag: "btn4",
+                                //label: Text("Capture"),
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.padded,
-                                backgroundColor: Colors.red,
-                                child: const Icon(Icons.stop_screen_share,
-                                    size: 36.0),
-                                onPressed: () async{
-                                  await Provider.of<Auth>(context,listen: false).fetchUser();
-                                  _isEnable = true;
-                                  _isSharing = false;
+                                backgroundColor: Theme.of(context).accentColor,
+                                child: const Icon(Icons.share, size: 36.0),
+                                onPressed: () async {
+                                  // Scaffold.of(context).hideCurrentSnackBar();
+                                  // Scaffold.of(context).showSnackBar(SnackBar(
+                                  //   content: Text(
+                                  //       "Reported successfully to the admin"),
+                                  //   duration: Duration(seconds: 1),
+                                  // ));
+                                  var currentLocation =
+                                      await _cLocation.getLocation();
+                                  Provider.of<LatLongProvider>(context,
+                                          listen: false)
+                                      .addReport(uid, currentLocation.latitude,
+                                          currentLocation.longitude)
+                                      .then((value) {
+                                    _showSnackBar("Report added successfully");
+                                  });
                                 },
                               ),
-                        SizedBox(height: 16.0),
-                        FloatingActionButton(
-                          heroTag: "btn2",
-                          //label: Text("Capture"),
-                          materialTapTargetSize: MaterialTapTargetSize.padded,
-                          backgroundColor: Theme.of(context).accentColor,
-                          child: const Icon(Icons.camera, size: 36.0),
-                          onPressed: () => _takePicture(uid),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-    );
+          );
   }
 }

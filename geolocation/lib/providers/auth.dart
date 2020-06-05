@@ -41,8 +41,6 @@ class Auth with ChangeNotifier {
   }
 
   bool get isAdminCh {
-    print("checking admin");
-    print(isadminCheck);
     return isadminCheck;
   }
 

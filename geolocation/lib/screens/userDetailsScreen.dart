@@ -221,17 +221,3 @@ class _UserDetailsState extends State<UserDetails> {
               ));
   }
 }
-
-class MyClipper extends CustomClipper<Rect> {
-  @override
-  Rect getClip(Size size) {
-    // TODO: implement getClip
-    return Rect.fromLTWH(0, 0, 200, 0);
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) {
-    // TODO: implement shouldReclip
-    return false;
-  }
-}
