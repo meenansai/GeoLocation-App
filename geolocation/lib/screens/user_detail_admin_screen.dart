@@ -19,9 +19,10 @@ class UserDetailsAdmin extends StatefulWidget {
 }
 
 class _UserDetailsAdminState extends State<UserDetailsAdmin> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   DateTime _dateTime;
   DateFormat dateFormat = new DateFormat('dd-MM-yyyy');
-  
+
   Widget buildTile(Icon icon, String title, String value) {
     return Card(
       elevation: 3,
@@ -34,6 +35,18 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
         ),
       ),
     );
+  }
+
+  _showSnackBar() {
+    final snackBar = new SnackBar(
+      content: Text(
+        "select date to continue.",
+        textAlign: TextAlign.center,
+      ),
+      duration: new Duration(seconds: 1),
+      backgroundColor: Colors.red,
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   @override
@@ -54,6 +67,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
         appBar: AppBar(
           title: Text('Details'),
         ),
+        key: _scaffoldKey,
         body: SingleChildScrollView(
           child: Stack(
             children: <Widget>[
@@ -144,11 +158,12 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                                           initialDate: _dateTime == null
                                               ? DateTime.now()
                                               : _dateTime,
-                                          firstDate: DateTime.now().subtract(Duration(days: 31)),
+                                          firstDate: DateTime.now()
+                                              .subtract(Duration(days: 31)),
                                           lastDate: DateTime.now())
                                       .then((date) {
-                                    setState(() {  
-                                      _dateTime =date;
+                                    setState(() {
+                                      _dateTime = date;
                                     });
                                   });
                                 },
@@ -176,12 +191,7 @@ class _UserDetailsAdminState extends State<UserDetailsAdmin> {
                                     } else {
                                       print("Get Report: date: " +
                                           _dateTime.toString());
-                                      // Scaffold.of(context)
-                                      //     .showSnackBar(SnackBar(
-                                      //   content: Text(
-                                      //       'Select the date to Continue.'),
-                                      //   duration: Duration(seconds: 1),
-                                      // ));
+                                      _showSnackBar();
                                     }
                                   }),
                             ),

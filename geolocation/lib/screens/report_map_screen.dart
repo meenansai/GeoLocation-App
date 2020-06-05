@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:geolocation/models/http_exception.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -89,9 +90,24 @@ class ReportMapScreenState extends State<ReportMapScreen> {
     polylines.clear();
     super.dispose();
   }
-
+  Future<Uint8List> getMarker() async {
+    ByteData byteData = await DefaultAssetBundle.of(context)
+        .load("assets/images/red_pin_2.png");
+    return byteData.buffer.asUint8List();
+  }
+  Uint8List imageData;
+  void pinLocation() async{
+    imageData = await getMarker();
+  }
+  // BitmapDescriptor pinLocationIcon;
+  // void setCustomMapPin() async {
+  //     pinLocationIcon = await BitmapDescriptor.fromAssetImage(
+  //     ImageConfiguration(devicePixelRatio: 2.5),
+  //     'assets/images/pin.png');
+  //  }
   @override
   Widget build(BuildContext context) {
+    pinLocation();
     polylineCoordinates =
         Provider.of<LatLongProvider>(context, listen: false).items;
     latlonglist = Provider.of<LatLongProvider>(context, listen: false).latlong;
@@ -102,9 +118,8 @@ class ReportMapScreenState extends State<ReportMapScreen> {
       _destLatitude = num.parse(latlonglist[latlonglist.length - 1].latitude.toStringAsFixed(5));
       _destLongitude = num.parse( latlonglist[latlonglist.length - 1].longitude.toStringAsFixed(5));
       });
-     print(latlonglist);
     }
-    
+  
     return Scaffold(
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -124,25 +139,18 @@ class ReportMapScreenState extends State<ReportMapScreen> {
                 onMapCreated: _onMapCreated,
                 // markers: Set<Marker>.of(markers.values),
                 markers: Set<Marker>.of(
+                  
                   polylineCoordinates.map((e){
-                    var index=latlonglist.indexWhere((element){
-                      return element.latitude==e.latitude && element.longitude==e.longitude;
-                    });
-                    print(index);
-                    var len=latlonglist.length;
-                    // print('----------');
-                    // print("origin lat"+_originLatitude.toString());
-                    // print("origin long"+_originLongitude.toString());
-                    // print("dest lat"+_destLatitude.toString());
-                    // print("dest long"+_destLongitude.toString());
                     
-                    // var a=num.parse(e.latitude.toStringAsFixed(5));
-                    // var b=num.parse(e.longitude.toStringAsFixed(5));
-                    // print(a);
-                    // print(b);
-                    if(index==0){
-                    //   print("adding origin marker");
-                    // print('----------');
+                    // var index=polylineCoordinates.lastIndexWhere((element){
+                    //   return element.latitude==e.latitude && element.longitude==e.longitude;
+                    // });
+                    // print(polylineCoordinates.length);
+                    // print(index);
+                    var len=latlonglist.length;
+                    if(e.latitude == polylineCoordinates[0].latitude && e.longitude == polylineCoordinates[0].longitude){
+                      print("adding origin marker");
+                    print('----------');
                       return Marker(
                         icon:BitmapDescriptor.defaultMarkerWithHue(0),
                         markerId: MarkerId(e.id),
@@ -153,16 +161,16 @@ class ReportMapScreenState extends State<ReportMapScreen> {
                           snippet: e.date,
                         ));
                     }
-                    else if(index==len-1){
-                    //   print("adding dest marker");
-                    // print('----------');
+                    else if(e.latitude == polylineCoordinates[len-1].latitude && e.longitude == polylineCoordinates[len-1].longitude){
+                      print("adding dest marker");
+                    print('----------');
                       return Marker(
                         icon:BitmapDescriptor.defaultMarkerWithHue(90),
                         markerId: MarkerId(e.id),
                         visible: true,
                         position: LatLng(e.latitude, e.longitude),
                         infoWindow: InfoWindow(
-                          title: 'Time',
+                          title: 'End',
                           snippet: e.date,
                         ));
                     }
@@ -170,11 +178,13 @@ class ReportMapScreenState extends State<ReportMapScreen> {
                       // print("adding regular marker");
                       // print('----------');
                       return Marker(
+                        // icon:BitmapDescriptor.defaultMarkerWithHue(200),
+                        icon: BitmapDescriptor.fromBytes(imageData),
                         markerId: MarkerId(e.id),
                         visible: true,
                         position: LatLng(e.latitude, e.longitude),
                         infoWindow: InfoWindow(
-                          title: 'End',
+                          title: 'Time',
                           snippet: e.date,
                         ));
                     } 

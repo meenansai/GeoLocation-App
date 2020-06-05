@@ -46,10 +46,25 @@ class LatLongProvider extends ChangeNotifier{
   Future<void> addReport(userId, latitude, longitude) async {
     var formatterDate = new DateFormat('dd-MM-yyyy');
     var now=DateTime.now();
+    var hourF=new DateFormat('H');
+    var minuF=new DateFormat('m');
+    var secF=new DateFormat('s');
+    String hour=hourF.format(now).toString();
+    if(hour.length==1){
+      hour='0'+hour;
+    }
+    String minu=minuF.format(now).toString();
+    if(minu.length==1){
+      minu='0'+minu;
+    }
+    String sec=secF.format(now).toString();
+    if(sec.length==1){
+      sec='0'+sec;
+    }
     var formatterTime= new DateFormat('H:m:s');
     String formattedDate = formatterDate.format(now);
     String formattedTime = formatterTime.format(now);
-    String currentDateTime=formattedDate+formattedTime;
+    String currentDateTime=formattedDate+hour+':'+minu+':'+sec;
     print(currentDateTime);
     var url = "https://geolocation-1b35f.firebaseio.com/latlong/$userId/$formattedDate/$currentDateTime.json";
     // ?auth=$authToken

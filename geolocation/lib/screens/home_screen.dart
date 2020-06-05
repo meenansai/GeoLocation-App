@@ -23,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Location location = new Location();
   Map<String, double> currentLocation;
   // var latitude;
@@ -192,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 event.snapshot.totalByteCount.toDouble());
         if (percentage == 100.0) {
           pr.hide();
+          _showSnackBar("Photo Uploaded Successfully");
         }
         print("THe percentage " + percentage.toString());
       });
@@ -205,6 +207,19 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       //Catch any cases here that might come up like canceled, interrupted
     }
+  }
+
+  //Display SnackBar
+  _showSnackBar(String message) {
+    final snackBar = new SnackBar(
+      content: Text(
+        message,
+        textAlign: TextAlign.center,
+      ),
+      duration: new Duration(seconds: 1),
+      backgroundColor: Colors.green,
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   @override
@@ -221,6 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
             appBar: AppBar(
               title: Text('Home'),
             ),
+            key: _scaffoldKey,
             drawer: _isEnable ? UserDrawer(uid) : SharingDrawer(),
             body: _initPosition == null
                 ? Center(child: CircularProgressIndicator())
@@ -312,8 +328,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Provider.of<LatLongProvider>(context,
                                           listen: false)
                                       .addReport(uid, currentLocation.latitude,
-                                          currentLocation.longitude);
-                                      
+                                          currentLocation.longitude)
+                                      .then((value) {
+                                    _showSnackBar("Report added successfully");
+                                  });
                                 },
                               ),
                             ],
