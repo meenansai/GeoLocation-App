@@ -88,7 +88,7 @@ class Auth with ChangeNotifier {
 
   Future<void> signup(String email, String password) async {
     final url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB0rtz2Q8ejgA63Yv0McdkDZWZ-_xyI8xs';
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[add your key here]';
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -117,7 +117,7 @@ class Auth with ChangeNotifier {
 
   Future<void> login(email, password) async {
     final url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB0rtz2Q8ejgA63Yv0McdkDZWZ-_xyI8xs';
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[add your key here]';
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -197,7 +197,7 @@ class Auth with ChangeNotifier {
 
   Future<Null> changePassword(String newPassword) async {
     final String changePasswordUrl =
-        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyB0rtz2Q8ejgA63Yv0McdkDZWZ-_xyI8xs';
+        'https://identitytoolkit.googleapis.com/v1/accounts:update?key=[add your key here]';
     print("ChangePassword:Password: " + newPassword);
     try {
       var resp = await http.post(changePasswordUrl,

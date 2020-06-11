@@ -26,7 +26,7 @@ class ReportMapScreenState extends State<ReportMapScreen> {
   List<LatLng> latlonglist = [];
   List<ReportLatLong> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
-  String googleAPiKey = "AIzaSyB0rtz2Q8ejgA63Yv0McdkDZWZ-_xyI8xs";
+  String googleAPiKey = "add your key here";
   bool _isLoading = false;
   bool _isinit = true;
   var uid;
